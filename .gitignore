@@ -1,0 +1,16 @@
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
+
+# Dolt database internals — regenerable from decisions/+memories/ via `make import`.
+.beads/embeddeddolt/
+.beads/last-touched
+.beads/interactions.jsonl
+.beads/metadata.json
+
+# .beads/issues.jsonl is a build artifact produced by `make export` from
+# decisions/ + memories/. Not tracked here; the release workflow builds it
+# from the markdown source and publishes it as a GitHub release asset.
+.beads/issues.jsonl

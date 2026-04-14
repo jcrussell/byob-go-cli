@@ -1,0 +1,44 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  roundtrip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Install bd
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/steveyegge/beads/main/install.sh | sh -s -- -b "$HOME/.local/bin"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Initialize an empty beads database
+        run: |
+          rm -rf .beads/embeddeddolt .beads/last-touched .beads/interactions.jsonl .beads/metadata.json
+          # --skip-agents: byob ships its own CLAUDE.md; do not let
+          # bd re-inject its boilerplate block and trip the drift check.
+          BD_NON_INTERACTIVE=1 bd init --prefix byob --skip-agents
+
+      - name: Drift check — committed markdown must round-trip cleanly
+        run: |
+          make import
+          make export
+          if ! git diff --quiet -- decisions/ memories/; then
+            echo "::error::make export produced changes to decisions/ or memories/. Run 'make import && make export' locally and commit the result."
+            git diff -- decisions/ memories/
+            exit 1
+          fi
