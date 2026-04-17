@@ -197,3 +197,7 @@ framework. See [`CREDITS.md`](./CREDITS.md) for the full attribution.
 - **Opinionated about cobra and pure-Go.** If you're not on cobra or
   you're willing to link against C, several patterns won't apply
   directly. Fork another template instead.
+
+## License
+
+BSD 3-Clause — see [LICENSE](./LICENSE).
