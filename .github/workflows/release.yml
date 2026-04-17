@@ -29,9 +29,9 @@ jobs:
         run: |
           # bd is a Go binary; download the latest release.
           # Replace with a pinned version when the template is used for
-          # real. See https://github.com/steveyegge/beads for install
+          # real. See https://github.com/gastownhall/beads for install
           # instructions.
-          curl -sSfL https://raw.githubusercontent.com/steveyegge/beads/main/install.sh | sh -s -- -b "$HOME/.local/bin"
+          curl -fsSL https://raw.githubusercontent.com/gastownhall/beads/main/scripts/install.sh | bash
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
       - name: Initialize an empty beads database
