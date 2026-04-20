@@ -125,3 +125,4 @@ func (p *spinnerImpl) Fail(err error)    { p.prog.Send(stopMsg{final: "✗ " + e
 // pkg/cmd/progress/bar.go uses schollz/progressbar/v3 similarly
 // (standalone, not bubbletea — see tradeoffs above).
 ```
+
