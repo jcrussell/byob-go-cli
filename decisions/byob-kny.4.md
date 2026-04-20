@@ -1,5 +1,5 @@
 ---
-id: byob-kny.6
+id: byob-kny.4
 title: SilenceUsage and SilenceErrors on the root command
 type: decision
 priority: 2

@@ -19,7 +19,7 @@ Picking just one frustrates the others. Env-var control
 (`MYTOOL_LOG=debug`) is expected by anyone who's used `gh` or
 `kubectl`.
 
-Idea: three persistent flags on root (byob-n37.6 pattern) with a
+Idea: three persistent flags on root (byob-n37.5 pattern) with a
 documented precedence:
 
 1. `--log-level=warn|info|debug` — explicit, wins when set.

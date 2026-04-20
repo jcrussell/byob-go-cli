@@ -24,9 +24,9 @@ Idea: the Factory holds the root logger as an eager field
 (one slog handler over `IO.ErrOut`) so it doesn't need the
 `func() (T, error)` lazy-closure shape that byob-1dv.1 reserves for
 expensive deps. The root command's
-`PersistentPreRunE` (byob-n37.6) attaches per-run attributes with
+`PersistentPreRunE` (byob-n37.5) attaches per-run attributes with
 `logger.With(...)` and stuffs the result into `cmd.Context()` — the
-same context already threaded through every runFunc (byob-w71.2).
+same context already threaded through every runFunc (byob-w71.1).
 Command code reaches for the logger via `slog.InfoContext(ctx, ...)`
 or a tiny `logs.From(ctx)` helper.
 

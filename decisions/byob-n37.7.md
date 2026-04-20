@@ -1,6 +1,6 @@
 ---
 id: byob-n37.7
-title: Cobra flag-group helpers over hand-rolled validation
+title: Implement pflag.Value for custom flag types
 type: decision
 priority: 2
 status: open
@@ -13,60 +13,56 @@ labels:
 
 ## Description
 
-Problem: validating flag combinations (mutual exclusion,
-required-together, at-least-one-required) inside runFunc means
-validation runs *after* side effects like opening files or logging in
-have already happened, error messages are hand-written and
-inconsistent across commands, and shell completion has no idea which
-flags conflict — so tab-complete happily offers combinations that
-will fail validation.
+Problem: flags whose value needs custom parsing — enums
+(`--format=json|yaml|text`), comma-separated lists, URLs, key=value
+pairs — are often captured as `string` and parsed inside runFunc.
+That means parse errors are reported after cobra has already accepted
+the flag, every command that needs the same shape repeats the parse
+logic, and `--help` output shows `string` instead of a meaningful
+type name.
 
-Idea: use cobra's declarative flag-group helpers. They run in cobra's
-validation phase before RunE, emit consistent error messages, and
-integrate with shell completion so conflicting flags are hidden from
-tab-complete:
+Idea: implement `pflag.Value` (cobra) or `flag.Value` (stdlib) on a
+custom type. The interface is tiny: `String() string`, `Set(string)
+error`, and for pflag `Type() string`. Register the flag with
+`cmd.Flags().Var(&v, "name", "usage")`. You get parse-time
+validation, a custom type name in `--help`, and a reusable type
+across every command that needs the same shape. Unit tests can
+exercise `Set()` directly without spinning up the command.
 
-- `cmd.MarkFlagsMutuallyExclusive("json", "yaml", "template")` — at
-  most one.
-- `cmd.MarkFlagsRequiredTogether("key", "secret")` — all or none.
-- `cmd.MarkFlagsOneRequired("file", "stdin", "url")` — at least one.
+Tradeoffs: a handful of extra lines per custom type. Pays back
+immediately on the second command that uses the same shape — and on
+the first unit test.
 
-For *value* validation (e.g., `--port` must be 1-65535), there's no
-declarative helper — a runFunc check is appropriate. Wrap the error
-with `cmdutil.FlagErrorf` so the top-level runner maps it to exit
-code 2 (usage error) instead of 1 (generic error).
-
-Tradeoffs: the helpers cover the three most common
-flag-relationship shapes. Rarer ones ("A and B require C, but not D")
-still need runFunc validation — and that's fine; don't contort a
-simple check into a helper combination.
+When not to use: single-command, single-use parsing so simple it's
+not worth a type (a one-off `--count` that's just an int). Use
+`IntVar` and move on.
 
 ## Design
 
 ```go
-func NewCmdExport(f *Factory, runF func(*Options) error) *cobra.Command {
-    opts := &Options{IO: f.IOStreams}
-    cmd := &cobra.Command{
-        Use: "export",
-        RunE: func(c *cobra.Command, args []string) error {
-            if opts.Port < 1 || opts.Port > 65535 {
-                return cmdutil.FlagErrorf("--port must be 1-65535, got %d", opts.Port)
-            }
-            if runF != nil {
-                return runF(opts)
-            }
-            return exportRun(opts)
-        },
+type Format string
+
+const (
+    FormatJSON Format = "json"
+    FormatYAML Format = "yaml"
+    FormatText Format = "text"
+)
+
+func (f *Format) String() string { return string(*f) }
+func (f *Format) Type() string   { return "format" }
+func (f *Format) Set(s string) error {
+    switch Format(s) {
+    case FormatJSON, FormatYAML, FormatText:
+        *f = Format(s)
+        return nil
     }
-    cmd.Flags().BoolVar(&opts.JSON, "json", false, "emit JSON")
-    cmd.Flags().BoolVar(&opts.YAML, "yaml", false, "emit YAML")
-    cmd.Flags().StringVar(&opts.Template, "template", "", "custom template")
-    cmd.Flags().IntVar(&opts.Port, "port", 8080, "listen port")
+    return fmt.Errorf("must be one of json|yaml|text")
+}
 
-    // declarative flag relationships — validated before RunE
-    cmd.MarkFlagsMutuallyExclusive("json", "yaml", "template")
-    cmd.MarkFlagsOneRequired("json", "yaml", "template")
-
+func NewCmdGet(f *Factory, runF func(*Options) error) *cobra.Command {
+    opts := &Options{Format: FormatText}
+    cmd := &cobra.Command{Use: "get"}
+    cmd.Flags().Var(&opts.Format, "format", "output format (json|yaml|text)")
     return cmd
 }
 ```

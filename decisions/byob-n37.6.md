@@ -1,6 +1,6 @@
 ---
 id: byob-n37.6
-title: PersistentPreRunE on root for app-wide middleware
+title: Cobra flag-group helpers over hand-rolled validation
 type: decision
 priority: 2
 status: open
@@ -13,60 +13,61 @@ labels:
 
 ## Description
 
-Problem: cross-cutting setup — logging configuration, authentication
-handshake, config load, telemetry init — needs to happen before *every*
-subcommand's business logic. Copy-pasting that setup into each `RunE`
-or into every `NewCmdXxx` is duplicative and drifts.
+Problem: validating flag combinations (mutual exclusion,
+required-together, at-least-one-required) inside runFunc means
+validation runs *after* side effects like opening files or logging in
+have already happened, error messages are hand-written and
+inconsistent across commands, and shell completion has no idea which
+flags conflict — so tab-complete happily offers combinations that
+will fail validation.
 
-Idea: put setup in `PersistentPreRunE` on the root command. Cobra's
-execution order is
-`OnInitialize → root.PersistentPreRunE → cmd.PreRunE → cmd.RunE → cmd.PostRunE → root.PersistentPostRunE`,
-so anything on the root's `PersistentPreRunE` runs once per invocation,
-before any subcommand's logic, with the parsed flags already bound. Use
-it as application-wide middleware: load config, wire auth, bind stuff
-onto the Factory, set up graceful-shutdown context handlers.
+Idea: use cobra's declarative flag-group helpers. They run in cobra's
+validation phase before RunE, emit consistent error messages, and
+integrate with shell completion so conflicting flags are hidden from
+tab-complete:
 
-Skip for help / version / completion subcommands by checking
-`cmd.Name()` or a command annotation — you don't want `mytool --help`
-to call your auth server.
+- `cmd.MarkFlagsMutuallyExclusive("json", "yaml", "template")` — at
+  most one.
+- `cmd.MarkFlagsRequiredTogether("key", "secret")` — all or none.
+- `cmd.MarkFlagsOneRequired("file", "stdin", "url")` — at least one.
 
-Tradeoffs: the root's `PersistentPreRunE` runs for *every* subcommand,
-including ones that might not need its setup. Keep it fast, or gate it
-behind a check. Alternative: per-subcommand `PreRunE`, but then you're
-back to duplication.
+For *value* validation (e.g., `--port` must be 1-65535), there's no
+declarative helper — a runFunc check is appropriate. Wrap the error
+with `cmdutil.FlagErrorf` so the top-level runner maps it to exit
+code 2 (usage error) instead of 1 (generic error).
 
-When not to use: tiny single-command tools where setup is obvious and
-lives in `main()`. The pattern pays off at 3+ subcommands that all need
-the same preamble.
+Tradeoffs: the helpers cover the three most common
+flag-relationship shapes. Rarer ones ("A and B require C, but not D")
+still need runFunc validation — and that's fine; don't contort a
+simple check into a helper combination.
 
 ## Design
 
 ```go
-func NewCmdRoot(f *Factory) *cobra.Command {
-    root := &cobra.Command{
-        Use:          "mytool",
-        SilenceUsage: true,
-
-        PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-            // Skip for meta-commands that shouldn't trigger real setup.
-            switch cmd.Name() {
-            case "help", "completion", "version":
-                return nil
+func NewCmdExport(f *Factory, runF func(*Options) error) *cobra.Command {
+    opts := &Options{IO: f.IOStreams}
+    cmd := &cobra.Command{
+        Use: "export",
+        RunE: func(c *cobra.Command, args []string) error {
+            if opts.Port < 1 || opts.Port > 65535 {
+                return cmdutil.FlagErrorf("--port must be 1-65535, got %d", opts.Port)
             }
-
-            // Load config (still lazy under the hood; first access wins).
-            cfg, err := f.Config()
-            if err != nil { return err }
-
-            // Wire logging level from config.
-            setupLogging(f.IOStreams.ErrOut, cfg.LogLevel)
-
-            // Anything else every command needs: auth, telemetry, etc.
-            return nil
+            if runF != nil {
+                return runF(opts)
+            }
+            return exportRun(opts)
         },
     }
-    // add children...
-    return root
+    cmd.Flags().BoolVar(&opts.JSON, "json", false, "emit JSON")
+    cmd.Flags().BoolVar(&opts.YAML, "yaml", false, "emit YAML")
+    cmd.Flags().StringVar(&opts.Template, "template", "", "custom template")
+    cmd.Flags().IntVar(&opts.Port, "port", 8080, "listen port")
+
+    // declarative flag relationships — validated before RunE
+    cmd.MarkFlagsMutuallyExclusive("json", "yaml", "template")
+    cmd.MarkFlagsOneRequired("json", "yaml", "template")
+
+    return cmd
 }
 ```
 

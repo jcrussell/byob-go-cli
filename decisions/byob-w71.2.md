@@ -1,6 +1,6 @@
 ---
 id: byob-w71.2
-title: Thread context.Context through every runFunc
+title: Wire Ctrl-C / SIGTERM via signal.NotifyContext in main
 type: decision
 priority: 2
 status: open
@@ -13,59 +13,44 @@ labels:
 
 ## Description
 
-Problem: a runFunc signature of `func(opts *Options) error` can't be
-cancelled. Every HTTP call, DB query, or subprocess inside it is
-uninterruptible, and Ctrl-C produces an orphaned child process or a stuck
-database connection.
+Problem: users hit Ctrl-C and expect the CLI to stop. Naive
+implementations either ignore the signal (process gets killed
+uncleanly, orphaning subprocesses and DB connections) or reach for
+channels, goroutines, and shutdown flags — all of which have to be
+plumbed into every blocking call.
 
-Idea: follow the Go stdlib convention: every function that might block
-takes a `context.Context` as its first argument, and returns quickly when
-`ctx.Done()` fires. runFuncs are no exception — make them
-`func(ctx context.Context, opts *Options) error`.
+Idea: use `signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)`
+at the top of `main()`. It returns a `context.Context` that cancels
+when either signal fires. Thread that context into
+`root.ExecuteContext(ctx)`, and every downstream HTTP call, DB query,
+or subprocess that accepts a `context.Context` cancels automatically
+— no channels, no goroutines, no shutdown flags.
 
-`main()` constructs the root ctx (see byob-w71.3 for the
-`signal.NotifyContext` setup) and threads it through
-`root.ExecuteContext(ctx)`. Cobra's `cmd.Context()` returns that same
-context inside every RunE, so the plumbing is: pull `ctx` out of
-`cmd.Context()` and pass it to your runFunc.
+Defer `cancel()` immediately after to release the signal handler on
+clean exit. A second Ctrl-C then reverts to the default handler and
+force-exits, which is the right behavior: the first one asks politely;
+the second kills.
 
-Tradeoffs: every blocking call inside a command now has to accept ctx and
-pass it through. That's a one-time audit of your codebase, not ongoing
-friction. The alternative — ignoring cancellation — produces the
-user-hostile behavior described in the Problem.
+Tradeoffs: the catch is that your runFuncs and everything they call
+must actually thread `ctx` through (see byob-w71.1). If they don't,
+the context cancels but nobody listens. That's a one-time audit.
 
-When not to use: never. Context threading is table stakes in modern Go.
+When not to use: never for a production CLI. Every CLI should exit
+cleanly on Ctrl-C.
 
 ## Design
 
 ```go
-// main.go — see byob-w71.3 for the signal.NotifyContext wiring that
-// feeds root.ExecuteContext(ctx). This decision picks up from there.
+func main() {
+    ctx, cancel := signal.NotifyContext(
+        context.Background(), os.Interrupt, syscall.SIGTERM,
+    )
+    defer cancel()
 
-// pkg/cmd/list/list.go
-type Options struct {
-    IO    *iostreams.IOStreams
-    Store func() (Store, error)
-    Limit int
-}
-
-func NewCmdList(f *Factory, runF func(ctx context.Context, opts *Options) error) *cobra.Command {
-    opts := &Options{IO: f.IOStreams, Store: f.Store}
-    cmd := &cobra.Command{
-        Use: "list",
-        RunE: func(c *cobra.Command, args []string) error {
-            if runF != nil { return runF(c.Context(), opts) }
-            return listRun(c.Context(), opts)
-        },
+    root := pkgcmd.NewCmdRoot(factory.New())
+    if err := root.ExecuteContext(ctx); err != nil {
+        os.Exit(exitCodeFor(err))
     }
-    return cmd
-}
-
-func listRun(ctx context.Context, opts *Options) error {
-    s, err := opts.Store()
-    if err != nil { return err }
-    items, err := s.List(ctx) // cancellable
-    ...
 }
 ```
 

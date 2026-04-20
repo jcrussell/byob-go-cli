@@ -1,6 +1,6 @@
 ---
 id: byob-n37.5
-title: Ship shell completions via cobra's completion subcommand
+title: PersistentPreRunE on root for app-wide middleware
 type: decision
 priority: 2
 status: open
@@ -13,66 +13,60 @@ labels:
 
 ## Description
 
-Problem: users want tab-completion for your tool's subcommands, flags, and
-flag values. Hand-writing bash / zsh / fish / powershell completion scripts
-is tedious, error-prone, and drifts out of sync the moment you add a new
-command.
+Problem: cross-cutting setup — logging configuration, authentication
+handshake, config load, telemetry init — needs to happen before *every*
+subcommand's business logic. Copy-pasting that setup into each `RunE`
+or into every `NewCmdXxx` is duplicative and drifts.
 
-Idea: cobra builds a `completion <shell>` subcommand for you automatically
-(via `InitDefaultCompletionCmd`), which emits a shell-specific completion
-script to stdout on demand. Users source it — `eval "$(mytool completion
-bash)"` — and get tab-completion for every subcommand, every flag, and
-anything you've marked with `ValidArgs` or `ValidArgsFunction`. No
-hand-written script, no drift, and it stays correct forever as you add
-commands because the script is regenerated from your current command tree
-at invocation time.
+Idea: put setup in `PersistentPreRunE` on the root command. Cobra's
+execution order is
+`OnInitialize → root.PersistentPreRunE → cmd.PreRunE → cmd.RunE → cmd.PostRunE → root.PersistentPostRunE`,
+so anything on the root's `PersistentPreRunE` runs once per invocation,
+before any subcommand's logic, with the parsed flags already bound. Use
+it as application-wide middleware: load config, wire auth, bind stuff
+onto the Factory, set up graceful-shutdown context handlers.
 
-Pair with `ValidArgs` (static list) or `ValidArgsFunction` (dynamic, can
-hit the network or read a file) to make tab-completion domain-aware:
-resource names, file paths filtered by extension, enum values.
+Skip for help / version / completion subcommands by checking
+`cmd.Name()` or a command annotation — you don't want `mytool --help`
+to call your auth server.
 
-Tradeoffs: users have to wire the `eval` into their shell rc file once.
-Docs for that are standard — copy the snippet cobra's own help prints out.
-After that it's invisible.
+Tradeoffs: the root's `PersistentPreRunE` runs for *every* subcommand,
+including ones that might not need its setup. Keep it fast, or gate it
+behind a check. Alternative: per-subcommand `PreRunE`, but then you're
+back to duplication.
 
-When not to use: a tool with two subcommands and four flags probably
-doesn't need tab completion. Everything above that threshold benefits
-enormously.
+When not to use: tiny single-command tools where setup is obvious and
+lives in `main()`. The pattern pays off at 3+ subcommands that all need
+the same preamble.
 
 ## Design
 
 ```go
-// Cobra creates the `completion` subcommand automatically. To customize
-// per-arg completions, set ValidArgs or ValidArgsFunction:
-cmd := &cobra.Command{
-    Use:       "delete <name>",
-    ValidArgsFunction: func(c *cobra.Command, args []string, toComplete string) (
-        []string, cobra.ShellCompDirective,
-    ) {
-        names := fetchNames(c.Context()) // can be dynamic
-        return names, cobra.ShellCompDirectiveNoFileComp
-    },
+func NewCmdRoot(f *Factory) *cobra.Command {
+    root := &cobra.Command{
+        Use:          "mytool",
+        SilenceUsage: true,
+
+        PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+            // Skip for meta-commands that shouldn't trigger real setup.
+            switch cmd.Name() {
+            case "help", "completion", "version":
+                return nil
+            }
+
+            // Load config (still lazy under the hood; first access wins).
+            cfg, err := f.Config()
+            if err != nil { return err }
+
+            // Wire logging level from config.
+            setupLogging(f.IOStreams.ErrOut, cfg.LogLevel)
+
+            // Anything else every command needs: auth, telemetry, etc.
+            return nil
+        },
+    }
+    // add children...
+    return root
 }
-
-// Register a flag's valid values:
-cmd.RegisterFlagCompletionFunc("format",
-    func(c *cobra.Command, args []string, toComplete string) (
-        []string, cobra.ShellCompDirective,
-    ) {
-        return []string{"json", "yaml", "table"},
-               cobra.ShellCompDirectiveNoFileComp
-    })
-```
-
-Users then enable completion in their shell rc:
-
-```bash
-# bash
-eval "$(mytool completion bash)"
-# or persist:
-mytool completion bash > /etc/bash_completion.d/mytool
-
-# zsh
-mytool completion zsh > "${fpath[1]}/_mytool"
 ```
 
