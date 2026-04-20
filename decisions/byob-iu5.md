@@ -1,0 +1,16 @@
+---
+id: byob-iu5
+title: State and cache directories
+type: epic
+priority: 2
+status: open
+labels:
+- cli
+- go
+- state
+---
+
+## Description
+
+Per-OS directories for cache, state, and data (config is covered in byob-xgz), plus the atomic-write discipline that keeps them consistent under concurrent invocations.
+

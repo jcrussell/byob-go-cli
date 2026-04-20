@@ -57,6 +57,24 @@ current practice and are worth codifying:
 - Error messages: lowercase, no trailing punctuation, no newlines, so
   they compose cleanly under wrapping
 
+## Third-party libraries and tools
+
+A few external libraries/tools are named in decisions where the
+template picks a default implementation. Each `See the …` link goes
+to the decision epic where the choice (and its swap-out story) is
+spelled out in full.
+
+- `charmbracelet/huh` — prompter backend. See the `prompter` epic.
+  Upstream: <https://github.com/charmbracelet/huh>
+- `charmbracelet/bubbles` — unknown-total progress spinner (via
+  `bubbles/spinner` + `bubbletea`). See the `progress` epic.
+  Upstream: <https://github.com/charmbracelet/bubbles>
+- `schollz/progressbar/v3` — known-total progress bar. See the
+  `progress` epic. Upstream: <https://github.com/schollz/progressbar>
+- `goreleaser/goreleaser` — release pipeline (cross-compile matrix,
+  archives, checksums). See the `release` epic. Upstream:
+  <https://github.com/goreleaser/goreleaser>
+
 ## spf13/cobra
 
 Most of this template uses `cobra` as its command substrate. Several
