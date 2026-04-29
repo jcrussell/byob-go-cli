@@ -101,3 +101,4 @@ return errors.NewHintf(
 The anchor string (`no-credentials`) is the contract. Renaming the
 heading in markdown is a breaking change for every binary that shipped
 the `ErrHint` pointing at it.
+

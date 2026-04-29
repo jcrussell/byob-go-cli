@@ -36,7 +36,35 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 DECISIONS_DIR = ROOT / "decisions"
 MEMORIES_DIR = ROOT / "memories"
 
-H2_RE = re.compile(r"^## (\S[^\n]*)$", re.M)
+H2_LINE_RE = re.compile(r"^## (\S[^\n]*?)\n?$")
+
+
+def _split_h2_sections(body: str) -> dict[str, str]:
+    """Slice `body` into {section_name_lower: content} on `## ` lines.
+
+    Skips `## ` lines that fall inside triple-backtick fenced code blocks,
+    so example markdown embedded in a Design block (e.g. a sample README
+    with `## Install`) doesn't get mistaken for a real section header.
+    """
+    sections: dict[str, str] = {}
+    current_name: str | None = None
+    current_start: int = 0
+    in_fence = False
+    pos = 0
+    for line in body.splitlines(keepends=True):
+        if line.lstrip(" ").startswith("```"):
+            in_fence = not in_fence
+        elif not in_fence:
+            m = H2_LINE_RE.match(line)
+            if m:
+                if current_name is not None:
+                    sections[current_name] = body[current_start:pos].strip("\n")
+                current_name = m.group(1).strip().lower()
+                current_start = pos + len(line)
+        pos += len(line)
+    if current_name is not None:
+        sections[current_name] = body[current_start:].strip("\n")
+    return sections
 
 
 # ---------- issue (decision/epic) beads ----------
@@ -87,13 +115,7 @@ def md_to_bead(text: str) -> dict:
     fm = yaml.safe_load(m.group(1)) or {}
     body = text[m.end():]
 
-    sections: dict[str, str] = {}
-    matches = list(H2_RE.finditer(body))
-    for i, h in enumerate(matches):
-        name = h.group(1).strip().lower()
-        start = h.end()
-        end = matches[i + 1].start() if i + 1 < len(matches) else len(body)
-        sections[name] = body[start:end].strip("\n")
+    sections = _split_h2_sections(body)
 
     bead: dict = {
         "id": fm["id"],

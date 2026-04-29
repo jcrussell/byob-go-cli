@@ -77,3 +77,4 @@ Other install methods: [releases page](…/releases) and `go install`.
 
 Anything a returning user might need — config schema, exit codes, API
 surface — lives behind one of those four links, not in this file.
+
