@@ -31,26 +31,11 @@ Two layers of guidance live in the beads DB:
    These auto-inject into every agent session via `bd prime`, so they
    are always-on context without ceremony.
 
-| Category          | Decisions |
-|-------------------|-----------|
-| `factory-di`      | central Factory with lazy closures for expensive deps |
-| `command-shape`   | Options + NewCmdXxx(f, runF) three-part split, runF test hook, cobra groups, shell completions subcommand, PersistentPreRunE middleware |
-| `iostreams`       | IOStreams abstraction, NO_COLOR-aware ColorScheme, data-to-Out / chatter-to-ErrOut |
-| `errors`          | semantic error types, ErrHint wrapper, FlagErrorf helper, SilenceUsage/Errors on root |
-| `config`          | walk-up-from-cwd discovery, layered resolution with provenance, lazy load |
-| `testing`         | inject test doubles through the Factory (interface fakes + `IOStreams.Test()`) |
-| `output`          | TTY-adaptive table printer, --json/--jq/--template export, generated Markdown/man docs from the cobra tree |
-| `lifecycle`       | `context.Context` through every runFunc |
-| `layout`          | `cmd/<bin>` / `internal/<bin>cmd` / `pkg/cmd/<feature>` three-tier split |
-| `deps-philosophy` | `CGO_ENABLED=0`, pure-Go drivers, `go:embed` assets |
-| `interfaces`      | narrow consumer interfaces, accept-interface-return-concrete |
-| `storage`         | per-backend Store impls (sqlite+postgres), go:embed migrations, `{Driver,DSN}` config, withTx helper |
-| `logging`         | stdlib `slog`, logger on Factory + ctx, `-v`/`-vv`/`--log-level` ladder, quiet default to keep ErrOut clean |
-| `http`            | `net/http` + RoundTripper middleware chain, tuned transport timeouts, retry policy (408/425/429/5xx + idempotent-only), `httptest.NewServer` for tests |
-| `prompter`        | narrow Prompter interface, stdlib-first live impl (huh as opt-in), ErrNotTTY when stdin isn't a terminal, `--yes`/`-y` destructive override |
-| `progress`        | Factory method per operation, TTY-adaptive (spinner on TTY, rate-limited chatter off-TTY), always on ErrOut |
-| `release`         | Makefile+ldflags for dev, goreleaser for tag-triggered matrix; shared `build` package vars; `version` subcommand + `--version` |
-| `state`           | per-OS config/cache/state dirs (XDG / Library / LocalAppData), Paths on Factory (lazy), atomic write via same-dir rename+fsync, flock for read-modify-write, schema versioning |
+Decisions are grouped under category epics covering the breadth of a
+Go CLI — architectural choices, CLI ergonomics, testing patterns,
+observability, and the packaging and release surface. Once imported,
+`bd list --type epic` enumerates the categories, and
+`bd list --type decision -l <category>` drills in.
 
 > **Agents:** if you've been asked to apply byob to an existing
 > repo, see [CLAUDE.md](./CLAUDE.md#applying-byob-to-an-existing-repo)

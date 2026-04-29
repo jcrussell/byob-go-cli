@@ -42,9 +42,8 @@ for this specific project.
    `bd update <id> --claim`.
 3. Before implementing, consult the relevant architectural decisions.
    To find them:
-     - `bd list --type decision -l <category>` (categories: factory-di,
-       command-shape, iostreams, errors, config, testing, output,
-       lifecycle, layout, deps-philosophy, interfaces)
+     - `bd list --type epic` to see the categories, then
+       `bd list --type decision -l <category>` to filter
      - `bd show <id>` for the full Problem / Idea / Tradeoffs / Sketch
 4. Implement the task following the decisions + memories. Code should
    match the template's idioms.
@@ -58,7 +57,7 @@ for this specific project.
 
 - `bd list --type decision` — browse all decisions
 - `bd list --type decision -l errors` — decisions in one category
-- `bd list --type epic` — the 11 category epics
+- `bd list --type epic` — the architectural category epics
 - `bd memories` — list the tip layer
 - `bd memories error` — search memories by keyword
 - `bd show <id>` — full bead contents
