@@ -96,7 +96,7 @@ agents discover them.
   tier has a real context budget that scales linearly with the
   corpus. Reserve it for idioms that compress to "RULE: X. WHY:
   short rationale" and apply broadly.
-- **Decision** (`decisions/<id>.md`) — Problem / Idea / Tradeoffs /
+- **Decision** (`decisions/<slug>/<id>.md`) — Problem / Idea / Tradeoffs /
   Sketch, queried on demand via `bd list --type decision -l
   <category>` and `bd show <id>`. Unlimited growth budget — adding a
   new decision costs nothing until an agent actually looks at it.

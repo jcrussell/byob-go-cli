@@ -1,6 +1,6 @@
 ---
 id: byob-65u
-title: Deps philosophy
+title: Dependencies
 type: epic
 priority: 2
 status: open

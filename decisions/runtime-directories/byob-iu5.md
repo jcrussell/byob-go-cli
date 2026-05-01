@@ -1,6 +1,6 @@
 ---
 id: byob-iu5
-title: State and cache directories
+title: Runtime directories
 type: epic
 priority: 2
 status: open

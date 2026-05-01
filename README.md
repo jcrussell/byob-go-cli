@@ -136,12 +136,13 @@ workflow.
 
 ## Updating the template
 
-Edits to the template live in `decisions/<id>.md` (decision beads) and
-`memories/<key>.md` (memory tips). Workflow:
+Edits to the template live in `decisions/<slug>/<id>.md` (decision
+beads, grouped into one subdirectory per epic) and `memories/<key>.md`
+(memory tips). Workflow:
 
 ```bash
 # Option A: edit a file directly, then push into beads
-$EDITOR decisions/byob-n37.1.md
+$EDITOR decisions/command-shape/byob-n37.1.md
 make import
 
 # Option B: edit via bd, then re-sync the md tree

@@ -2,11 +2,13 @@
 """Convert between bd-export JSONL and per-bead / per-memory Markdown files.
 
 Usage:
-  scripts/convert.py split < exported.jsonl   # write decisions/*.md + memories/*.md
+  scripts/convert.py split < exported.jsonl   # write decisions/<slug>/<id>.md + memories/*.md
   scripts/convert.py join                     # emit unified JSONL to stdout
 
-Decision / epic beads live at `decisions/<id>.md` with frontmatter + body
-sections (`## Description`, `## Design`).
+Decision / epic beads live at `decisions/<slug>/<id>.md` with frontmatter +
+body sections (`## Description`, `## Design`). The `<slug>` is derived from
+the epic's (or standalone decision's) title, so the directory tree mirrors
+the parent → child grouping that already exists in the data.
 
 Memories — the tip layer, auto-injected by `bd prime` — live at
 `memories/<key>.md` with a tiny frontmatter (key, optional category) and
@@ -28,6 +30,7 @@ import argparse
 import json
 import pathlib
 import re
+import shutil
 import sys
 
 import yaml
@@ -37,6 +40,12 @@ DECISIONS_DIR = ROOT / "decisions"
 MEMORIES_DIR = ROOT / "memories"
 
 H2_LINE_RE = re.compile(r"^## (\S[^\n]*?)\n?$")
+SLUG_NONALNUM_RE = re.compile(r"[^a-z0-9]+")
+
+
+def _slug(title: str) -> str:
+    """Lowercase, hyphen-collapsed slug used as the epic subdirectory name."""
+    return SLUG_NONALNUM_RE.sub("-", title.lower()).strip("-")
 
 
 def _split_h2_sections(body: str) -> dict[str, str]:
@@ -176,15 +185,18 @@ def md_to_memory(text: str) -> dict:
 # ---------- subcommands ----------
 
 def cmd_split(_args) -> None:
-    DECISIONS_DIR.mkdir(exist_ok=True)
+    # Wipe the decisions tree wholesale so renamed/removed slug folders
+    # don't linger between runs. memories/ stays flat — only purge files.
+    shutil.rmtree(DECISIONS_DIR, ignore_errors=True)
+    DECISIONS_DIR.mkdir(parents=True, exist_ok=True)
     MEMORIES_DIR.mkdir(exist_ok=True)
-    for f in DECISIONS_DIR.glob("*.md"):
-        f.unlink()
     for f in MEMORIES_DIR.glob("*.md"):
         f.unlink()
 
-    n_decisions = 0
-    n_memories = 0
+    # Two-pass: buffer records so we can resolve a child decision's
+    # parent title (and hence subdir slug) regardless of stream order.
+    issue_recs: list[dict] = []
+    memory_recs: list[dict] = []
     skipped_types: dict[str, int] = {}
     for line in sys.stdin:
         line = line.strip()
@@ -192,26 +204,45 @@ def cmd_split(_args) -> None:
             continue
         rec = json.loads(line)
         if rec.get("_type") == "memory":
-            key = rec.get("key")
-            if not key:
-                continue
-            (MEMORIES_DIR / f"{key}.md").write_text(
-                memory_to_md(rec), encoding="utf-8"
+            if rec.get("key"):
+                memory_recs.append(rec)
+            continue
+        if not rec.get("id"):
+            continue
+        issue_type = rec.get("issue_type")
+        if issue_type not in ("decision", "epic"):
+            skipped_types[issue_type or "<missing>"] = (
+                skipped_types.get(issue_type or "<missing>", 0) + 1
             )
-            n_memories += 1
-        else:
-            if not rec.get("id"):
-                continue
-            issue_type = rec.get("issue_type")
-            if issue_type not in ("decision", "epic"):
-                skipped_types[issue_type or "<missing>"] = (
-                    skipped_types.get(issue_type or "<missing>", 0) + 1
-                )
-                continue
-            (DECISIONS_DIR / f"{rec['id']}.md").write_text(
-                bead_to_md(rec), encoding="utf-8"
-            )
-            n_decisions += 1
+            continue
+        issue_recs.append(rec)
+
+    titles_by_id = {r["id"]: r.get("title", "") for r in issue_recs}
+
+    def parent_id(rec: dict) -> str | None:
+        for dep in rec.get("dependencies", []) or []:
+            if dep.get("type") == "parent-child" and dep.get("depends_on_id"):
+                return dep["depends_on_id"]
+        return None
+
+    n_decisions = 0
+    for rec in issue_recs:
+        pid = parent_id(rec)
+        slug_source = titles_by_id.get(pid) if pid else rec.get("title", "")
+        slug = _slug(slug_source) or rec["id"]
+        subdir = DECISIONS_DIR / slug
+        subdir.mkdir(parents=True, exist_ok=True)
+        (subdir / f"{rec['id']}.md").write_text(
+            bead_to_md(rec), encoding="utf-8"
+        )
+        n_decisions += 1
+
+    n_memories = 0
+    for rec in memory_recs:
+        (MEMORIES_DIR / f"{rec['key']}.md").write_text(
+            memory_to_md(rec), encoding="utf-8"
+        )
+        n_memories += 1
 
     print(
         f"Wrote {n_decisions} decision files and {n_memories} memory files",
@@ -228,7 +259,7 @@ def cmd_split(_args) -> None:
 
 
 def cmd_join(_args) -> None:
-    for f in sorted(DECISIONS_DIR.glob("*.md")):
+    for f in sorted(DECISIONS_DIR.rglob("*.md"), key=lambda p: p.as_posix()):
         bead = md_to_bead(f.read_text(encoding="utf-8"))
         print(json.dumps(bead, ensure_ascii=False))
     if MEMORIES_DIR.exists():

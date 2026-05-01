@@ -1,6 +1,6 @@
 ---
 id: byob-2cd
-title: 'Agent onboarding: read this first'
+title: Agent onboarding
 type: decision
 priority: 2
 status: open
