@@ -51,7 +51,7 @@ curl -L -o /tmp/byob-decisions.jsonl \
 
 Once seeding succeeds, file task beads under the target's own prefix
 for any concrete gaps you spot. **Each task bead should reference the
-relevant byob decision** (e.g. `byob-n37`, `byob-kny`) so future
+relevant byob decision** (e.g. `byob-command-shape`, `byob-errors`) so future
 agents land on the rationale without re-deriving it.
 
 ### Anti-patterns

@@ -142,7 +142,7 @@ beads, grouped into one subdirectory per epic) and `memories/<key>.md`
 
 ```bash
 # Option A: edit a file directly, then push into beads
-$EDITOR decisions/command-shape/byob-n37.1.md
+$EDITOR decisions/command-shape/byob-command-shape.1.md
 make import
 
 # Option B: edit via bd, then re-sync the md tree

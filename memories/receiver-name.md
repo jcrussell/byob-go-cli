@@ -8,6 +8,6 @@ everywhere, never mixing in `func (st *Store)` or generic
 `this`/`self`/`me`. The Code Review Comments wiki and the Google Go
 Style decisions both call this out: short receivers read like math,
 consistent receivers let you scan a type's methods without re-parsing
-the binding name. The lint floor (byob-aws.7) catches drift via
+the binding name. The lint floor (byob-release.7) catches drift via
 `revive`'s `receiver-naming` rule, but state the rule explicitly here
 for new code and code review.
