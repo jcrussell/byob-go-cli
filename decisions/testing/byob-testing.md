@@ -5,9 +5,9 @@ type: epic
 priority: 2
 status: open
 labels:
-- cli
-- go
-- testing
+  - cli
+  - go
+  - testing
 ---
 
 ## Description

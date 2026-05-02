@@ -5,9 +5,9 @@ type: epic
 priority: 2
 status: open
 labels:
-- cli
-- deps-philosophy
-- go
+  - cli
+  - deps-philosophy
+  - go
 ---
 
 ## Description

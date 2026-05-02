@@ -6,10 +6,10 @@ priority: 2
 status: open
 parent: byob-storage
 labels:
-- cli
-- go
-- storage
-- testing
+  - cli
+  - go
+  - storage
+  - testing
 ---
 
 ## Description

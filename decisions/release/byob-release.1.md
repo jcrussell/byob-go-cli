@@ -6,9 +6,9 @@ priority: 2
 status: open
 parent: byob-release
 labels:
-- cli
-- go
-- release
+  - cli
+  - go
+  - release
 ---
 
 ## Description

@@ -6,10 +6,10 @@ priority: 2
 status: open
 parent: byob-progress
 labels:
-- cli
-- go
-- iostreams
-- progress
+  - cli
+  - go
+  - iostreams
+  - progress
 ---
 
 ## Description

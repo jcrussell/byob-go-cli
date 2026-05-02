@@ -6,9 +6,9 @@ priority: 2
 status: open
 parent: byob-interfaces
 labels:
-- cli
-- go
-- interfaces
+  - cli
+  - go
+  - interfaces
 ---
 
 ## Description

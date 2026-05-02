@@ -6,9 +6,9 @@ priority: 2
 status: open
 parent: byob-http-client
 labels:
-- cli
-- go
-- http
+  - cli
+  - go
+  - http
 ---
 
 ## Description

@@ -6,9 +6,9 @@ priority: 2
 status: open
 parent: byob-command-shape
 labels:
-- cli
-- command-shape
-- go
+  - cli
+  - command-shape
+  - go
 ---
 
 ## Description

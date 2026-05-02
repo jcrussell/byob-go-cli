@@ -5,10 +5,10 @@ type: decision
 priority: 2
 status: open
 labels:
-- cli
-- go
-- meta
-- onboarding
+  - cli
+  - go
+  - meta
+  - onboarding
 ---
 
 ## Description

@@ -6,9 +6,9 @@ priority: 2
 status: open
 parent: byob-user-docs
 labels:
-- cli
-- go
-- user-docs
+  - cli
+  - go
+  - user-docs
 ---
 
 ## Description

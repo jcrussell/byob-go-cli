@@ -6,10 +6,10 @@ priority: 2
 status: open
 parent: byob-input-validation
 labels:
-- cli
-- go
-- input-validation
-- storage
+  - cli
+  - go
+  - input-validation
+  - storage
 ---
 
 ## Description

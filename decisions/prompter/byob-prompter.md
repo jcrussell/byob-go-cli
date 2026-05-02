@@ -5,9 +5,9 @@ type: epic
 priority: 2
 status: open
 labels:
-- cli
-- go
-- prompter
+  - cli
+  - go
+  - prompter
 ---
 
 ## Description

@@ -5,9 +5,9 @@ type: epic
 priority: 2
 status: open
 labels:
-- cli
-- factory-di
-- go
+  - cli
+  - factory-di
+  - go
 ---
 
 ## Description

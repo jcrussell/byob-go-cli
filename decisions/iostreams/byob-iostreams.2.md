@@ -6,9 +6,9 @@ priority: 2
 status: open
 parent: byob-iostreams
 labels:
-- cli
-- go
-- iostreams
+  - cli
+  - go
+  - iostreams
 ---
 
 ## Description

@@ -6,9 +6,9 @@ priority: 2
 status: open
 parent: byob-dependencies
 labels:
-- cli
-- deps-philosophy
-- go
+  - cli
+  - deps-philosophy
+  - go
 ---
 
 ## Description

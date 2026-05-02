@@ -6,10 +6,10 @@ priority: 2
 status: open
 parent: byob-release
 labels:
-- cli
-- command-shape
-- go
-- release
+  - cli
+  - command-shape
+  - go
+  - release
 ---
 
 ## Description

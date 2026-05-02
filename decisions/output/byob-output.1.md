@@ -6,9 +6,9 @@ priority: 2
 status: open
 parent: byob-output
 labels:
-- cli
-- go
-- output
+  - cli
+  - go
+  - output
 ---
 
 ## Description

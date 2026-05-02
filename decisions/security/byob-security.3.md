@@ -6,9 +6,9 @@ priority: 2
 status: open
 parent: byob-security
 labels:
-- cli
-- go
-- security
+  - cli
+  - go
+  - security
 ---
 
 ## Description

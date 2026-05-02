@@ -6,10 +6,10 @@ priority: 2
 status: open
 parent: byob-prompter
 labels:
-- cli
-- command-shape
-- go
-- prompter
+  - cli
+  - command-shape
+  - go
+  - prompter
 ---
 
 ## Description

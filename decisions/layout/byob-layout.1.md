@@ -6,9 +6,9 @@ priority: 2
 status: open
 parent: byob-layout
 labels:
-- cli
-- go
-- layout
+  - cli
+  - go
+  - layout
 ---
 
 ## Description

@@ -5,9 +5,9 @@ type: epic
 priority: 2
 status: open
 labels:
-- cli
-- command-shape
-- go
+  - cli
+  - command-shape
+  - go
 ---
 
 ## Description

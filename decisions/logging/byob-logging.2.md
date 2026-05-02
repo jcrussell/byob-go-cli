@@ -6,9 +6,9 @@ priority: 2
 status: open
 parent: byob-logging
 labels:
-- cli
-- go
-- logging
+  - cli
+  - go
+  - logging
 ---
 
 ## Description

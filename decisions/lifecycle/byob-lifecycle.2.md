@@ -6,9 +6,9 @@ priority: 2
 status: open
 parent: byob-lifecycle
 labels:
-- cli
-- go
-- lifecycle
+  - cli
+  - go
+  - lifecycle
 ---
 
 ## Description

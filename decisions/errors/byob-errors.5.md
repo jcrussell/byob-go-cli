@@ -6,9 +6,9 @@ priority: 2
 status: open
 parent: byob-errors
 labels:
-- cli
-- errors
-- go
+  - cli
+  - errors
+  - go
 ---
 
 ## Description

@@ -6,10 +6,10 @@ priority: 2
 status: open
 parent: byob-prompter
 labels:
-- cli
-- deps-philosophy
-- go
-- prompter
+  - cli
+  - deps-philosophy
+  - go
+  - prompter
 ---
 
 ## Description
