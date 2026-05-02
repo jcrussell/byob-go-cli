@@ -1,0 +1,32 @@
+{{define "category.html"}}<!DOCTYPE html>
+<html lang="en">
+{{template "head" .}}
+<body>
+{{template "header" .}}
+<main class="container">
+{{template "sidebar" .}}
+<article class="content">
+<nav class="breadcrumb"><a href="{{url "/"}}">Home</a> &rsaquo; <span>{{.Category.Title}}</span></nav>
+<h1>{{.Category.Title}}</h1>
+{{with .Category.Epic}}
+{{.DescriptionHTML}}
+{{.DesignHTML}}
+{{end}}
+<section class="children">
+  <h2>Decisions</h2>
+  {{if .Category.Children}}
+  <ul>
+    {{range .Category.Children}}
+    <li><a href="{{url .Path}}"><code>{{.ID}}</code> — {{.Title}}</a></li>
+    {{end}}
+  </ul>
+  {{else}}
+  <p class="empty">No child decisions yet.</p>
+  {{end}}
+</section>
+</article>
+</main>
+{{template "footer" .}}
+</body>
+</html>
+{{end}}

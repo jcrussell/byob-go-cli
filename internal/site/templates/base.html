@@ -1,0 +1,50 @@
+{{define "head"}}
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{.Title}}</title>
+<link rel="stylesheet" href="{{url "/static/site.css"}}">
+</head>
+{{end}}
+
+{{define "header"}}
+<header>
+  <div class="container">
+    <a href="{{url "/"}}" class="brand">byob-go-cli</a>
+    <nav>
+      <a href="{{url "/memories/"}}">Memories</a>
+      <a href="{{.Site.RepoURL}}">GitHub</a>
+    </nav>
+  </div>
+</header>
+{{end}}
+
+{{define "sidebar"}}
+{{if .Category}}
+<aside class="sidebar">
+  <h2>Categories</h2>
+  <ul class="cats">
+    {{range .Site.Categories}}
+    <li class="cat{{if eq .Slug $.Category.Slug}} active{{end}}">
+      <a href="{{url .Epic.Path}}">{{.Title}}</a>
+      {{if and (eq .Slug $.Category.Slug) .Children}}
+      <ul class="kids">
+        {{range .Children}}
+        <li{{if and $.Decision (eq .ID $.Decision.ID)}} class="active"{{end}}><a href="{{url .Path}}">{{.Title}}</a></li>
+        {{end}}
+      </ul>
+      {{end}}
+    </li>
+    {{end}}
+  </ul>
+</aside>
+{{end}}
+{{end}}
+
+{{define "footer"}}
+<footer>
+  <div class="container">
+    <p>byob-go-cli — generated from <a href="{{.Site.RepoURL}}/tree/main/decisions"><code>decisions/</code></a> and <a href="{{.Site.RepoURL}}/tree/main/memories"><code>memories/</code></a>. <a href="{{.Site.RepoURL}}">View source</a>.</p>
+  </div>
+</footer>
+{{end}}

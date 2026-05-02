@@ -29,7 +29,7 @@ check:
 	rm -f "$$tmp"
 
 site:
-	@go run ./cmd/byob site -out _site
+	@go run ./cmd/byob site --out _site
 	@echo "Wrote _site/ ($$(find _site -type f | wc -l) files)"
 
 site-clean:

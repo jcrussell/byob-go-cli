@@ -1,0 +1,21 @@
+{{define "memories.html"}}<!DOCTYPE html>
+<html lang="en">
+{{template "head" .}}
+<body>
+{{template "header" .}}
+<main class="container">
+<article class="content wide">
+<h1>Memories</h1>
+<p class="lede">One-paragraph idiomatic tips. <code>bd prime</code> auto-injects all of these into agent sessions; this page is the human-browsable mirror.</p>
+{{range .Site.Memories}}
+<section class="memory" id="{{.Key}}">
+  <h2><a href="#{{.Key}}"><code>{{.Key}}</code></a></h2>
+  {{.HTML}}
+</section>
+{{end}}
+</article>
+</main>
+{{template "footer" .}}
+</body>
+</html>
+{{end}}

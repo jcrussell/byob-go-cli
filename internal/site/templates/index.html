@@ -1,0 +1,40 @@
+{{define "index.html"}}<!DOCTYPE html>
+<html lang="en">
+{{template "head" .}}
+<body>
+{{template "header" .}}
+<main class="container home">
+<article class="content">
+<section class="intro">{{.Site.IntroHTML}}</section>
+
+<section class="categories-grid">
+  <h2>Decisions</h2>
+  <p class="lede">{{len .Site.Categories}} category epics, each grouping a handful of decisions in the Problem / Idea / Tradeoffs / Sketch shape.</p>
+  <ul class="grid">
+    {{range .Site.Categories}}
+    <li>
+      <a href="{{url .Epic.Path}}">
+        <h3>{{.Title}}</h3>
+        <div class="card-body">{{.Epic.DescriptionHTML}}</div>
+      </a>
+      <span class="count">{{len .Children}} decision{{if ne (len .Children) 1}}s{{end}}</span>
+    </li>
+    {{end}}
+  </ul>
+</section>
+
+<section class="memories-list">
+  <h2>Memories</h2>
+  <p class="lede">{{len .Site.Memories}} one-paragraph idiomatic tips. <a href="{{url "/memories/"}}">Read all</a>.</p>
+  <ul class="memory-keys">
+    {{range .Site.Memories}}
+    <li><a href="{{url "/memories/"}}#{{.Key}}"><code>{{.Key}}</code></a></li>
+    {{end}}
+  </ul>
+</section>
+</article>
+</main>
+{{template "footer" .}}
+</body>
+</html>
+{{end}}

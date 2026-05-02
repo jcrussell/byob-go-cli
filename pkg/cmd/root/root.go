@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/cobra"
 
 	joincmd "github.com/jcrussell/byob-go-cli/pkg/cmd/join"
+	sitecmd "github.com/jcrussell/byob-go-cli/pkg/cmd/site"
 	splitcmd "github.com/jcrussell/byob-go-cli/pkg/cmd/split"
 	"github.com/jcrussell/byob-go-cli/pkg/cmdutil"
 )
@@ -28,5 +29,6 @@ func NewCmdRoot(f *cmdutil.Factory) *cobra.Command {
 	}
 	cmd.AddCommand(splitcmd.NewCmdSplit(f, nil))
 	cmd.AddCommand(joincmd.NewCmdJoin(f, nil))
+	cmd.AddCommand(sitecmd.NewCmdSite(f, nil))
 	return cmd
 }

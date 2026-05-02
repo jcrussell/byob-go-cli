@@ -14,3 +14,7 @@
 # decisions/ + memories/. Not tracked here; the release workflow builds it
 # from the markdown source and publishes it as a GitHub release asset.
 .beads/issues.jsonl
+
+# `make site` output and any locally-built binaries.
+_site/
+bin/

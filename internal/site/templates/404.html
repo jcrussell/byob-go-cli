@@ -1,0 +1,15 @@
+{{define "404.html"}}<!DOCTYPE html>
+<html lang="en">
+{{template "head" .}}
+<body>
+{{template "header" .}}
+<main class="container">
+<article class="content">
+<h1>Not found</h1>
+<p>That page isn't here. Try the <a href="{{url "/"}}">homepage</a> or the <a href="{{url "/memories/"}}">memories</a>.</p>
+</article>
+</main>
+{{template "footer" .}}
+</body>
+</html>
+{{end}}

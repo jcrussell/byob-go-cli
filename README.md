@@ -168,6 +168,19 @@ preventing the "forgot to commit after editing" drift class. The
 markdown under `decisions/` and `memories/` is the only source of
 truth this repo tracks.
 
+## Site
+
+The decisions and memories also render as a browsable static site at
+**https://jcrussell.github.io/byob-go-cli/**. The site is built by
+`.github/workflows/pages.yml` on every push to `main`; locally,
+`make site` produces a copy in `_site/`.
+
+The first time the site is enabled in a fork, the repo owner needs
+to flip Settings → Pages → "Build and deployment → Source" to
+`GitHub Actions`. After that, pushes to `main` deploy automatically.
+Forks that rename the repo should update the `--base-url` and
+`--repo-url` flags in `.github/workflows/pages.yml`.
+
 ## Lineage
 
 Decisions here trace back to four sources: the `gh` CLI codebase, the
