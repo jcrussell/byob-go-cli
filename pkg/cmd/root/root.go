@@ -5,6 +5,8 @@ package root
 import (
 	"github.com/spf13/cobra"
 
+	joincmd "github.com/jcrussell/byob-go-cli/pkg/cmd/join"
+	splitcmd "github.com/jcrussell/byob-go-cli/pkg/cmd/split"
 	"github.com/jcrussell/byob-go-cli/pkg/cmdutil"
 )
 
@@ -24,5 +26,7 @@ func NewCmdRoot(f *cmdutil.Factory) *cobra.Command {
 		// No default action: invoking `byob` with no args prints help.
 		RunE: func(c *cobra.Command, args []string) error { return c.Help() },
 	}
+	cmd.AddCommand(splitcmd.NewCmdSplit(f, nil))
+	cmd.AddCommand(joincmd.NewCmdJoin(f, nil))
 	return cmd
 }
