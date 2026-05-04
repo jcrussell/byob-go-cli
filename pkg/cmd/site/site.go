@@ -15,6 +15,7 @@ type Options struct {
 	DecisionsDir string
 	MemoriesDir  string
 	ReadmePath   string
+	CreditsPath  string
 	OutDir       string
 	BaseURL      string
 	RepoURL      string
@@ -39,6 +40,7 @@ func NewCmdSite(f *cmdutil.Factory, runF func(*Options) error) *cobra.Command {
 	cmd.Flags().StringVar(&opts.DecisionsDir, "decisions-dir", "decisions", "decisions tree root")
 	cmd.Flags().StringVar(&opts.MemoriesDir, "memories-dir", "memories", "memories directory")
 	cmd.Flags().StringVar(&opts.ReadmePath, "readme", "README.md", "README to source the homepage intro from (empty to skip)")
+	cmd.Flags().StringVar(&opts.CreditsPath, "credits", "CREDITS.md", "credits markdown to render at /credits/ (empty to skip)")
 	cmd.Flags().StringVar(&opts.OutDir, "out", "_site", "output directory")
 	cmd.Flags().StringVar(&opts.BaseURL, "base-url", "", "URL prefix for absolute links (e.g. /byob-go-cli for project pages)")
 	cmd.Flags().StringVar(&opts.RepoURL, "repo-url", "https://github.com/jcrussell/byob-go-cli", "GitHub repo URL for header and source links")
@@ -53,5 +55,5 @@ func siteRun(opts *Options) error {
 	}
 	s.BaseURL = opts.BaseURL
 	s.RepoURL = opts.RepoURL
-	return sitepkg.Render(s, opts.OutDir, opts.ReadmePath, opts.Strict, opts.IO.ErrOut)
+	return sitepkg.Render(s, opts.OutDir, opts.ReadmePath, opts.CreditsPath, opts.Strict, opts.IO.ErrOut)
 }

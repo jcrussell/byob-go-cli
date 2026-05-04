@@ -13,9 +13,10 @@ type Site struct {
 	Categories []*Category
 	Memories   []*Memory
 
-	BaseURL   string        // e.g. "/byob-go-cli" or "" for local preview
-	RepoURL   string        // e.g. "https://github.com/jcrussell/byob-go-cli"
-	IntroHTML template.HTML // homepage intro, rendered from README.md
+	BaseURL     string        // e.g. "/byob-go-cli" or "" for local preview
+	RepoURL     string        // e.g. "https://github.com/jcrussell/byob-go-cli"
+	IntroHTML   template.HTML // homepage intro, rendered from README.md
+	CreditsHTML template.HTML // /credits/ page body, rendered from CREDITS.md (empty = page omitted)
 
 	idToPath map[string]string
 }

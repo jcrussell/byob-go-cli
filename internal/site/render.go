@@ -28,11 +28,12 @@ var staticFS embed.FS
 
 var refRE = regexp.MustCompile(`\bbyob-[a-z][a-z0-9-]*(?:\.\d+)?\b`)
 
-// Render renders s into outDir. README is the path to README.md (used for
-// the homepage intro); pass "" to skip the intro. With strict=true, Render
-// returns an error if any byob-* cross-reference can't be resolved to a
-// known page (per the --strict flag's promise in pkg/cmd/site).
-func Render(s *Site, outDir, readmePath string, strict bool, log io.Writer) error {
+// Render renders s into outDir. readmePath is the path to README.md (used
+// for the homepage intro); creditsPath is the path to CREDITS.md (rendered
+// at /credits/); pass "" to skip either. With strict=true, Render returns
+// an error if any byob-* cross-reference can't be resolved to a known
+// page (per the --strict flag's promise in pkg/cmd/site).
+func Render(s *Site, outDir, readmePath, creditsPath string, strict bool, log io.Writer) error {
 	md := newGoldmark()
 
 	var unknownRefs []string
@@ -50,6 +51,16 @@ func Render(s *Site, outDir, readmePath string, strict bool, log io.Writer) erro
 			return fmt.Errorf("read README: %w", err)
 		}
 		s.IntroHTML = renderMarkdown(md, readmeIntro(string(intro)))
+	}
+
+	// Resolve credits body if provided. Run through rewriteRefs so any
+	// byob-* mentions in CREDITS.md become links and respect --strict.
+	if creditsPath != "" {
+		body, err := os.ReadFile(creditsPath)
+		if err != nil {
+			return fmt.Errorf("read CREDITS: %w", err)
+		}
+		s.CreditsHTML = renderMarkdown(md, s.rewriteRefs(string(body), refLog))
 	}
 
 	// Render decision and memory bodies.
@@ -113,6 +124,16 @@ func Render(s *Site, outDir, readmePath string, strict bool, log io.Writer) erro
 		Title: "Decisions — byob-go-cli",
 	}); err != nil {
 		return err
+	}
+
+	// Credits page (only when CREDITS.md was supplied).
+	if s.CreditsHTML != "" {
+		if err := writePage(tpl, "credits.html", filepath.Join(outDir, "credits", "index.html"), pageData{
+			Site:  s,
+			Title: "Credits — byob-go-cli",
+		}); err != nil {
+			return err
+		}
 	}
 
 	// Categories + decisions.

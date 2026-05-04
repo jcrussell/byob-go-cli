@@ -151,7 +151,7 @@ func TestRender_strictFailsOnUnknown(t *testing.T) {
 	}}
 	s.Categories[0].Epic.Category = s.Categories[0]
 
-	err := Render(s, tmp, "", true, nil)
+	err := Render(s, tmp, "", "", true, nil)
 	if err == nil {
 		t.Fatal("Render with strict and unknown ref returned nil; want error")
 	}
@@ -175,7 +175,7 @@ func TestRender_nonStrictTolerantOfUnknown(t *testing.T) {
 	}}
 	s.Categories[0].Epic.Category = s.Categories[0]
 
-	if err := Render(s, tmp, "", false, nil); err != nil {
+	if err := Render(s, tmp, "", "", false, nil); err != nil {
 		t.Fatalf("non-strict Render unexpectedly failed: %v", err)
 	}
 }

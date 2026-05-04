@@ -14,6 +14,8 @@
     <nav>
       <a href="{{url "/decisions/"}}">Decisions</a>
       <a href="{{url "/memories/"}}">Memories</a>
+      {{if .Site.CreditsHTML}}<a href="{{url "/credits/"}}">Credits</a>{{end}}
+      <a href="{{.Site.RepoURL}}/releases/latest">Releases</a>
       <a href="{{.Site.RepoURL}}">GitHub</a>
     </nav>
   </div>

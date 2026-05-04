@@ -48,7 +48,7 @@ func TestSiteSmoke_writesExpectedFiles(t *testing.T) {
 	s.BaseURL = "/x"
 	s.RepoURL = "https://example.com/repo"
 
-	if err := sitepkg.Render(s, out, "", false, nil); err != nil {
+	if err := sitepkg.Render(s, out, "", "", false, nil); err != nil {
 		t.Fatalf("Render: %v", err)
 	}
 
@@ -107,7 +107,7 @@ func TestSiteSmoke_strictFailsOnUnknownRef(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := sitepkg.Render(s, out, "", true, nil); err == nil {
+	if err := sitepkg.Render(s, out, "", "", true, nil); err == nil {
 		t.Fatal("expected strict Render to fail on unknown cross-reference")
 	}
 }
