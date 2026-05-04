@@ -23,10 +23,19 @@ import:
 	rm -f "$$tmp"
 
 check:
-	@tmp=$$(mktemp); \
-	go run ./cmd/byob join > "$$tmp"; \
-	echo "Joined $$(wc -l < "$$tmp") records from decisions/ + memories/"; \
-	rm -f "$$tmp"
+	@set -e; \
+	a=$$(mktemp); b=$$(mktemp); d=$$(mktemp -d); m=$$(mktemp -d); \
+	trap 'rm -rf "$$a" "$$b" "$$d" "$$m"' EXIT; \
+	go run ./cmd/byob join > "$$a"; \
+	go run ./cmd/byob split --decisions-dir "$$d" --memories-dir "$$m" < "$$a" >/dev/null; \
+	go run ./cmd/byob join --decisions-dir "$$d" --memories-dir "$$m" > "$$b"; \
+	if diff -q "$$a" "$$b" >/dev/null; then \
+	  echo "Roundtrip OK ($$(wc -l < "$$a") records)"; \
+	else \
+	  echo "Roundtrip FAILED — join → split → join is not idempotent:"; \
+	  diff "$$a" "$$b"; \
+	  exit 1; \
+	fi
 
 site:
 	@go run ./cmd/byob site --out _site

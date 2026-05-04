@@ -30,7 +30,8 @@ jobs:
           go run ./cmd/byob site \
             --out _site \
             --base-url /byob-go-cli \
-            --repo-url https://github.com/jcrussell/byob-go-cli
+            --repo-url https://github.com/jcrussell/byob-go-cli \
+            --strict
 
       - uses: actions/configure-pages@v5
 

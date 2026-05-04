@@ -18,3 +18,4 @@
 # `make site` output and any locally-built binaries.
 _site/
 bin/
+/byob
