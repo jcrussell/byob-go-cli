@@ -52,7 +52,7 @@ type Decision struct {
 	DescriptionHTML template.HTML
 	DesignHTML      template.HTML
 
-	Path     string // route, e.g. "/storage/byob-storage.1/" (no BaseURL)
+	Path     string // route, e.g. "/decisions/storage/byob-storage.1/" (no BaseURL)
 	Category *Category
 	Prev     *Decision
 	Next     *Decision

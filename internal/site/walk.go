@@ -35,7 +35,7 @@ func Walk(decisionsDir, memoriesDir string) (*Site, error) {
 			return nil, fmt.Errorf("category %s has no epic file", c.Slug)
 		}
 		c.Epic.Category = c
-		c.Epic.Path = "/" + c.Slug + "/"
+		c.Epic.Path = "/decisions/" + c.Slug + "/"
 		s.idToPath[c.Epic.ID] = c.Epic.Path
 		for i, d := range c.Children {
 			if d.ParentID != c.Epic.ID {
@@ -43,7 +43,7 @@ func Walk(decisionsDir, memoriesDir string) (*Site, error) {
 					d.ID, d.ParentID, c.Slug, c.Epic.ID)
 			}
 			d.Category = c
-			d.Path = "/" + c.Slug + "/" + d.ID + "/"
+			d.Path = "/decisions/" + c.Slug + "/" + d.ID + "/"
 			s.idToPath[d.ID] = d.Path
 			if i > 0 {
 				d.Prev = c.Children[i-1]

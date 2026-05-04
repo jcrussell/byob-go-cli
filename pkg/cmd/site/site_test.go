@@ -55,8 +55,9 @@ func TestSiteSmoke_writesExpectedFiles(t *testing.T) {
 	for _, p := range []string{
 		filepath.Join(out, "index.html"),
 		filepath.Join(out, "404.html"),
-		filepath.Join(out, "demo", "index.html"),
-		filepath.Join(out, "demo", "demo.1", "index.html"),
+		filepath.Join(out, "decisions", "index.html"),
+		filepath.Join(out, "decisions", "demo", "index.html"),
+		filepath.Join(out, "decisions", "demo", "demo.1", "index.html"),
 		filepath.Join(out, "memories", "index.html"),
 		filepath.Join(out, "static", "site.css"),
 	} {
@@ -69,12 +70,12 @@ func TestSiteSmoke_writesExpectedFiles(t *testing.T) {
 	// anchor in the rendered HTML, but no `<code>[demo-epic](...)</code>`
 	// pattern (which is what would happen if the rewriter touched
 	// inline-code spans).
-	body, err := os.ReadFile(filepath.Join(out, "demo", "demo.1", "index.html"))
+	body, err := os.ReadFile(filepath.Join(out, "decisions", "demo", "demo.1", "index.html"))
 	if err != nil {
 		t.Fatal(err)
 	}
 	html := string(body)
-	if !strings.Contains(html, `href="/x/demo/"`) {
+	if !strings.Contains(html, `href="/x/decisions/demo/"`) {
 		t.Errorf("expected cross-link to demo-epic, got: %s", html)
 	}
 	if strings.Contains(html, `<code>[`) {

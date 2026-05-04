@@ -117,7 +117,7 @@ func Render(s *Site, outDir, readmePath string, strict bool, log io.Writer) erro
 
 	// Categories + decisions.
 	for _, c := range s.Categories {
-		if err := writePage(tpl, "category.html", filepath.Join(outDir, c.Slug, "index.html"), pageData{
+		if err := writePage(tpl, "category.html", filepath.Join(outDir, "decisions", c.Slug, "index.html"), pageData{
 			Site:     s,
 			Category: c,
 			Title:    c.Title() + " — byob-go-cli",
@@ -125,7 +125,7 @@ func Render(s *Site, outDir, readmePath string, strict bool, log io.Writer) erro
 			return err
 		}
 		for _, d := range c.Children {
-			if err := writePage(tpl, "decision.html", filepath.Join(outDir, c.Slug, d.ID, "index.html"), pageData{
+			if err := writePage(tpl, "decision.html", filepath.Join(outDir, "decisions", c.Slug, d.ID, "index.html"), pageData{
 				Site:     s,
 				Category: c,
 				Decision: d,
