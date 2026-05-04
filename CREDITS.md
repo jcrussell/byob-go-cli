@@ -1,10 +1,11 @@
 # Credits and Lineage
 
-The decisions and memories in this template trace back to four sources.
-Everything is rewritten generically so the template drops into any Go
-CLI project without dragging upstream conventions or code along. Credit
-for the underlying ideas belongs to the authors below; mistakes and
-over-generalizations in the distillation belong to this repository.
+The decisions and memories in this template trace back to a handful of
+upstream sources. Everything is rewritten generically so the template
+drops into any Go CLI project without dragging upstream conventions or
+code along. Credit for the underlying ideas belongs to the authors
+below; mistakes and over-generalizations in the distillation belong to
+this repository.
 
 ## github.com/cli/cli (the `gh` CLI)
 
@@ -25,6 +26,26 @@ Most of the architectural patterns in this template originate from the
 - `ErrHint` wrapper for attaching user-facing remediation text to errors
 
 Upstream: <https://github.com/cli/cli>
+
+## spf13/cobra
+
+Most of this template uses `cobra` as its command substrate. Several
+idioms in the cobra codebase reward explicit surfacing rather than
+leaving agents to discover them the hard way:
+
+- Ship shell completions via cobra's auto-generated `completion <shell>`
+  subcommand
+- Set `SilenceUsage` and `SilenceErrors` on the root to stop cobra from
+  dumping the usage blob on runtime errors
+- `PersistentPreRunE` on the root command as app-wide middleware (auth,
+  config load, logging init)
+- Generate reference docs (Markdown, man pages) from the cobra tree via
+  the `cobra/doc` package
+- `MarkFlagsMutuallyExclusive` / `MarkFlagsRequiredTogether` /
+  `MarkFlagsOneRequired` as the declarative way to validate flag
+  relationships (integrates with shell completion)
+
+Upstream: <https://github.com/spf13/cobra>
 
 ## Go source tree (standard library + `cmd/go`)
 
@@ -74,23 +95,3 @@ spelled out in full.
 - `goreleaser/goreleaser` — release pipeline (cross-compile matrix,
   archives, checksums). See the `release` epic. Upstream:
   <https://github.com/goreleaser/goreleaser>
-
-## spf13/cobra
-
-Most of this template uses `cobra` as its command substrate. Several
-idioms in the cobra codebase reward explicit surfacing rather than
-leaving agents to discover them the hard way:
-
-- Ship shell completions via cobra's auto-generated `completion <shell>`
-  subcommand
-- Set `SilenceUsage` and `SilenceErrors` on the root to stop cobra from
-  dumping the usage blob on runtime errors
-- `PersistentPreRunE` on the root command as app-wide middleware (auth,
-  config load, logging init)
-- Generate reference docs (Markdown, man pages) from the cobra tree via
-  the `cobra/doc` package
-- `MarkFlagsMutuallyExclusive` / `MarkFlagsRequiredTogether` /
-  `MarkFlagsOneRequired` as the declarative way to validate flag
-  relationships (integrates with shell completion)
-
-Upstream: <https://github.com/spf13/cobra>
