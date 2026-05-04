@@ -78,6 +78,27 @@ current practice and are worth codifying:
 - Error messages: lowercase, no trailing punctuation, no newlines, so
   they compose cleanly under wrapping
 
+## Go Code Review Comments wiki
+
+<https://go.dev/wiki/CodeReviewComments> is the community-maintained
+list of style rules Go reviewers cite. Most of the always-on style
+memories in this template (`receiver-name`, `no-get-prefix`,
+`doc-comment-shape`, `no-blank-error-discard`, `goroutine-exit-path`,
+`context-first-param`, `pass-by-value-default`, `got-want-order`,
+`errors-message-style`, `initialism-casing`) are distillations of rules
+stated there. The wiki is also the authoritative source for the
+"avoid in-band error values" guidance behind `byob-errors.5`.
+
+## Google Go Style
+
+<https://google.github.io/styleguide/go/decisions> is the public
+Google Go style guide, structured as a set of "decisions" with
+rationale (the same shape as the `decisions/` tree in this template).
+It restates and extends the Code Review Comments wiki; most memories
+that cite the wiki cite this guide too. It is the source for the
+`quote-strings-in-errors` rule and contributes to `byob-errors.5` and
+`byob-testing.2`.
+
 ## Third-party libraries and tools
 
 A few external libraries/tools are named in decisions where the
