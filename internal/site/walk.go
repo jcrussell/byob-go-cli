@@ -31,12 +31,17 @@ func Walk(decisionsDir, memoriesDir string) (*Site, error) {
 	sortCategories(s.Categories)
 
 	for _, c := range s.Categories {
-		if c.Epic != nil {
-			c.Epic.Category = c
-			c.Epic.Path = "/" + c.Slug + "/"
-			s.idToPath[c.Epic.ID] = c.Epic.Path
+		if c.Epic == nil {
+			return nil, fmt.Errorf("category %s has no epic file", c.Slug)
 		}
+		c.Epic.Category = c
+		c.Epic.Path = "/" + c.Slug + "/"
+		s.idToPath[c.Epic.ID] = c.Epic.Path
 		for i, d := range c.Children {
+			if d.ParentID != c.Epic.ID {
+				return nil, fmt.Errorf("decision %s has parent %q but lives under %s (epic %s)",
+					d.ID, d.ParentID, c.Slug, c.Epic.ID)
+			}
 			d.Category = c
 			d.Path = "/" + c.Slug + "/" + d.ID + "/"
 			s.idToPath[d.ID] = d.Path
@@ -45,18 +50,6 @@ func Walk(decisionsDir, memoriesDir string) (*Site, error) {
 			}
 			if i < len(c.Children)-1 {
 				d.Next = c.Children[i+1]
-			}
-		}
-	}
-
-	for _, c := range s.Categories {
-		if c.Epic == nil {
-			return nil, fmt.Errorf("category %s has no epic file", c.Slug)
-		}
-		for _, d := range c.Children {
-			if d.ParentID != c.Epic.ID {
-				return nil, fmt.Errorf("decision %s has parent %q but lives under %s (epic %s)",
-					d.ID, d.ParentID, c.Slug, c.Epic.ID)
 			}
 		}
 	}
@@ -108,7 +101,13 @@ func loadCategory(dir, slug string) (*Category, error) {
 		// A category's "epic" is the parentless file in the directory —
 		// usually type=epic, but a few one-off categories (e.g.
 		// agent-onboarding) have a single parentless decision instead.
+		// Two parentless files is a data bug we want to fail loud on,
+		// not silently let the second clobber the first.
 		if d.ParentID == "" {
+			if cat.Epic != nil {
+				return nil, fmt.Errorf("%s: multiple parentless files (%s and %s); a category needs exactly one epic",
+					dir, cat.Epic.ID, d.ID)
+			}
 			cat.Epic = d
 		} else {
 			cat.Children = append(cat.Children, d)

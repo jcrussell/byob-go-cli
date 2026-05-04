@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strings"
 
 	"github.com/yuin/goldmark"
@@ -28,9 +29,19 @@ var staticFS embed.FS
 var refRE = regexp.MustCompile(`\bbyob-[a-z][a-z0-9-]*(?:\.\d+)?\b`)
 
 // Render renders s into outDir. README is the path to README.md (used for
-// the homepage intro); pass "" to skip the intro.
+// the homepage intro); pass "" to skip the intro. With strict=true, Render
+// returns an error if any byob-* cross-reference can't be resolved to a
+// known page (per the --strict flag's promise in pkg/cmd/site).
 func Render(s *Site, outDir, readmePath string, strict bool, log io.Writer) error {
 	md := newGoldmark()
+
+	var unknownRefs []string
+	refLog := func(id string) {
+		unknownRefs = append(unknownRefs, id)
+		if log != nil {
+			fmt.Fprintf(log, "unknown ref: %s\n", id)
+		}
+	}
 
 	// Resolve homepage intro from README if provided.
 	if readmePath != "" {
@@ -44,21 +55,26 @@ func Render(s *Site, outDir, readmePath string, strict bool, log io.Writer) erro
 	// Render decision and memory bodies.
 	for _, c := range s.Categories {
 		if c.Epic != nil {
-			s.renderDecision(md, c.Epic, strict, log)
+			s.renderDecision(md, c.Epic, refLog)
 		}
 		for _, d := range c.Children {
-			s.renderDecision(md, d, strict, log)
+			s.renderDecision(md, d, refLog)
 		}
 	}
 	for _, m := range s.Memories {
-		body := s.rewriteRefs(m.raw, strict, log)
+		body := s.rewriteRefs(m.raw, refLog)
 		m.HTML = renderMarkdown(md, body)
+	}
+
+	if strict && len(unknownRefs) > 0 {
+		return fmt.Errorf("strict: %d unknown byob-* cross-reference(s): %s",
+			len(unknownRefs), strings.Join(uniqueSorted(unknownRefs), ", "))
 	}
 
 	// Build templates.
 	tpl, err := template.New("").Funcs(template.FuncMap{
 		"url": func(p string) string {
-			if strings.HasPrefix(p, "http://") || strings.HasPrefix(p, "https://") {
+			if strings.HasPrefix(p, "http://") || strings.HasPrefix(p, "https://") || strings.HasPrefix(p, "//") {
 				return p
 			}
 			return s.BaseURL + p
@@ -128,46 +144,140 @@ func Render(s *Site, outDir, readmePath string, strict bool, log io.Writer) erro
 	return nil
 }
 
-func (s *Site) renderDecision(md goldmark.Markdown, d *Decision, strict bool, log io.Writer) {
+func (s *Site) renderDecision(md goldmark.Markdown, d *Decision, refLog func(string)) {
 	if d.RawDescription != "" {
-		body := s.rewriteRefs(d.RawDescription, strict, log)
+		body := s.rewriteRefs(d.RawDescription, refLog)
 		d.DescriptionHTML = renderMarkdown(md, body)
 	}
 	if d.RawDesign != "" {
-		body := s.rewriteRefs(d.RawDesign, strict, log)
+		body := s.rewriteRefs(d.RawDesign, refLog)
 		d.DesignHTML = renderMarkdown(md, body)
 	}
 }
 
 // rewriteRefs replaces bare `byob-foo` / `byob-foo.N` mentions with markdown
-// links to the corresponding page, skipping fenced code blocks. Unknown ids
-// are left as plain text; under strict, an unknown id returns an error via
-// log (not a hard failure for v1, just diagnostic).
-func (s *Site) rewriteRefs(body string, strict bool, log io.Writer) string {
+// links to the corresponding page, skipping content inside fenced code
+// blocks, indented (4-space / tab) code blocks, and inline backtick spans.
+// Unknown ids are reported via refLog and left as plain text.
+func (s *Site) rewriteRefs(body string, refLog func(string)) string {
 	var out strings.Builder
 	inFence := false
 	for _, line := range splitKeep(body) {
 		trim := strings.TrimLeft(line, " \t")
-		if strings.HasPrefix(trim, "```") {
+		if strings.HasPrefix(trim, "```") || strings.HasPrefix(trim, "~~~") {
 			inFence = !inFence
 			out.WriteString(line)
 			continue
 		}
-		if inFence {
+		if inFence || isIndentedCodeBlock(line) {
 			out.WriteString(line)
 			continue
 		}
-		out.WriteString(refRE.ReplaceAllStringFunc(line, func(m string) string {
-			if path, ok := s.idToPath[m]; ok {
-				return fmt.Sprintf("[%s](%s%s)", m, s.BaseURL, path)
-			}
-			if strict && log != nil {
-				fmt.Fprintf(log, "unknown ref: %s\n", m)
-			}
-			return m
-		}))
+		out.WriteString(s.rewriteOutsideCodeSpans(line, refLog))
 	}
 	return out.String()
+}
+
+// rewriteOutsideCodeSpans walks a single non-code line, alternating between
+// inline-code regions (delimited by matched backtick runs of equal length,
+// per CommonMark) and free text. The regex pass runs only on the free-text
+// chunks, so `byob-foo` inside inline code is preserved verbatim.
+func (s *Site) rewriteOutsideCodeSpans(line string, refLog func(string)) string {
+	var out strings.Builder
+	i := 0
+	for i < len(line) {
+		if line[i] == '`' {
+			j := i
+			for j < len(line) && line[j] == '`' {
+				j++
+			}
+			tickLen := j - i
+			closeOff := findCloseTicks(line[j:], tickLen)
+			if closeOff < 0 {
+				// Unbalanced run — CommonMark renders the rest as text;
+				// our rewriter follows suit so the literal `byob-` mention
+				// in prose still gets linkified.
+				s.writeRewritten(&out, line[i:], refLog)
+				return out.String()
+			}
+			end := j + closeOff + tickLen
+			out.WriteString(line[i:end])
+			i = end
+			continue
+		}
+		j := i
+		for j < len(line) && line[j] != '`' {
+			j++
+		}
+		s.writeRewritten(&out, line[i:j], refLog)
+		i = j
+	}
+	return out.String()
+}
+
+func (s *Site) writeRewritten(out *strings.Builder, text string, refLog func(string)) {
+	out.WriteString(refRE.ReplaceAllStringFunc(text, func(m string) string {
+		if path, ok := s.idToPath[m]; ok {
+			return fmt.Sprintf("[%s](%s%s)", m, s.BaseURL, path)
+		}
+		// Only versioned children (`byob-foo.N`) count as "known unknowns"
+		// for diagnostics. A bare `byob-foo` mention that doesn't resolve
+		// is almost always prose (project names, generic byob-* terms),
+		// not a stale ref worth failing strict on.
+		if refLog != nil && strings.ContainsRune(m, '.') {
+			refLog(m)
+		}
+		return m
+	}))
+}
+
+// isIndentedCodeBlock reports whether line begins with the 4-space or tab
+// indent that turns it into a CommonMark indented code block. The check is
+// intentionally conservative: list-item continuation paragraphs at 4
+// spaces look the same and will also be skipped, which is fine — missing
+// a rewrite is a strictly better failure mode than mangling code samples.
+func isIndentedCodeBlock(line string) bool {
+	if strings.HasPrefix(line, "\t") {
+		return true
+	}
+	return len(line) >= 4 && line[:4] == "    "
+}
+
+// findCloseTicks returns the offset of the next backtick run of exactly n
+// ticks within s, or -1 if none.
+func findCloseTicks(s string, n int) int {
+	for i := 0; i < len(s); {
+		if s[i] != '`' {
+			i++
+			continue
+		}
+		j := i
+		for j < len(s) && s[j] == '`' {
+			j++
+		}
+		if j-i == n {
+			return i
+		}
+		i = j
+	}
+	return -1
+}
+
+func uniqueSorted(xs []string) []string {
+	if len(xs) == 0 {
+		return nil
+	}
+	seen := make(map[string]struct{}, len(xs))
+	out := make([]string, 0, len(xs))
+	for _, x := range xs {
+		if _, ok := seen[x]; ok {
+			continue
+		}
+		seen[x] = struct{}{}
+		out = append(out, x)
+	}
+	sort.Strings(out)
+	return out
 }
 
 // readmeIntro returns the README content from the start through (but not

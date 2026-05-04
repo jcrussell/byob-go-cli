@@ -13,10 +13,8 @@
   <ul class="grid">
     {{range .Site.Categories}}
     <li>
-      <a href="{{url .Epic.Path}}">
-        <h3>{{.Title}}</h3>
-        <div class="card-body">{{.Epic.DescriptionHTML}}</div>
-      </a>
+      <h3><a href="{{url .Epic.Path}}">{{.Title}}</a></h3>
+      <div class="card-body">{{.Epic.DescriptionHTML}}</div>
       <span class="count">{{len .Children}} decision{{if ne (len .Children) 1}}s{{end}}</span>
     </li>
     {{end}}

@@ -149,10 +149,17 @@ pre {
   background: #fff;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 .categories-grid .grid li:hover { border-color: #0a58ca; }
 .categories-grid .grid h3 { margin: 0 0 6px; font-size: 1rem; color: #0a58ca; }
 .categories-grid .grid a { color: inherit; }
+.categories-grid .grid h3 a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
 .categories-grid .grid p { color: #555; font-size: 0.9rem; flex: 1; margin: 0 0 8px; }
 .categories-grid .card-body {
   color: #555;
@@ -163,6 +170,8 @@ pre {
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  position: relative;
+  z-index: 2;
 }
 .categories-grid .card-body p { margin: 0 0 4px; color: inherit; font-size: inherit; }
 .categories-grid .card-body p:last-child { margin-bottom: 0; }
