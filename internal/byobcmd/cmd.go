@@ -7,6 +7,7 @@ package byobcmd
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/spf13/cobra"
 
@@ -22,7 +23,7 @@ func Run(root *cobra.Command, args []string, ios *iostreams.IOStreams) int {
 	root.SetOut(ios.Out)
 	root.SetErr(ios.ErrOut)
 
-	err := root.Execute()
+	err := classify(root.Execute())
 	switch {
 	case err == nil:
 		return 0
@@ -31,10 +32,29 @@ func Run(root *cobra.Command, args []string, ios *iostreams.IOStreams) int {
 	case errors.Is(err, cmdutil.ErrSilent):
 		return 1
 	case errors.As(err, new(*cmdutil.FlagError)):
-		fmt.Fprintln(ios.ErrOut, err)
+		fmt.Fprintln(ios.ErrOut, "error:", err)
 		return 2
 	default:
 		fmt.Fprintln(ios.ErrOut, "error:", err)
 		return 1
 	}
+}
+
+// classify wraps cobra-emitted "unknown command" errors as FlagError so
+// they exit 2 alongside flag-parse errors. Cobra has no public sentinel
+// for unknown-command, so we match on the message prefix it emits in
+// (*Command).findSuggestions / Execute. SetFlagErrorFunc on root handles
+// the pflag side (unknown flag, missing arg).
+func classify(err error) error {
+	if err == nil {
+		return nil
+	}
+	var fe *cmdutil.FlagError
+	if errors.As(err, &fe) {
+		return err
+	}
+	if strings.HasPrefix(err.Error(), "unknown command ") {
+		return &cmdutil.FlagError{Err: err}
+	}
+	return err
 }

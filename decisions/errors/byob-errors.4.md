@@ -22,14 +22,26 @@ that they misinvoked the command.
 
 Idea: set `SilenceUsage = true` and `SilenceErrors = true` on the root
 command. Both settings cascade to every child via inheritance.
-`SilenceUsage` stops the usage dump on `RunE` errors. `SilenceErrors`
-stops cobra from printing the error string at all — which you then do
-yourself in the top-level runner, so you control the formatting (color,
-hints, exit code mapping).
+`SilenceUsage` stops the usage dump on every cobra-emitted error;
+`SilenceErrors` stops cobra from printing the error string at all — which
+you then do yourself in the top-level runner, so you control the
+formatting (color, hints, exit code mapping).
 
-Cobra still prints usage on actual flag-parsing errors (unknown flags,
-missing arguments), which is the correct behavior — those errors really
-are "you invoked me wrong".
+The catch: `SilenceUsage = true` cascades to flag-parsing errors too —
+"unknown flag", "missing argument", and the unknown-command path no
+longer print usage. The runner's "error: ..." line is the only signal
+the user sees. Pair this with a `cobra.SetFlagErrorFunc` that wraps
+pflag errors as `*FlagError` (so the runner maps them to exit 2) and a
+string-prefix check for "unknown command" in the runner (cobra has no
+typed sentinel for that path). The exit code carries the "you invoked
+me wrong" semantics; the message carries the diagnostic.
+
+If you'd rather have usage on flag errors and silence only on RunE
+errors, do the gh-cli inversion: drop `SilenceUsage` from root, and set
+`cmd.SilenceUsage = true` as the first line of every `RunE`. Cobra
+emits flag errors before `RunE`, so usage still prints there. The
+trade-off is a per-command line of boilerplate the runner-on-root
+approach avoids.
 
 Tradeoffs: `SilenceErrors = true` means you're responsible for printing
 errors yourself. That's what your top-level runner already does anyway if
@@ -52,15 +64,30 @@ func NewCmdRoot(f *Factory) *cobra.Command {
         // Don't print errors; the top-level runner formats them.
         SilenceErrors: true,
     }
+    // Wrap pflag's flag-parse errors so the runner exits 2 per byob-errors.1.
+    root.SetFlagErrorFunc(func(c *cobra.Command, err error) error {
+        return &cmdutil.FlagError{Err: err}
+    })
     // ... register groups and subcommands ...
     return root
+}
+
+// runner: wrap cobra's untyped "unknown command" message as FlagError
+// before mapping. Cobra has no public sentinel for that path.
+func classify(err error) error {
+    if err == nil { return nil }
+    var fe *cmdutil.FlagError
+    if errors.As(err, &fe) { return err }
+    if strings.HasPrefix(err.Error(), "unknown command ") {
+        return &cmdutil.FlagError{Err: err}
+    }
+    return err
 }
 
 // main.go
 func main() {
     root := pkgcmd.NewCmdRoot(factory.New())
     err := root.ExecuteContext(ctx)
-    os.Exit(runner.MapErrorToExitCode(err))  // owns all stderr formatting
+    os.Exit(runner.MapErrorToExitCode(classify(err)))
 }
 ```
-

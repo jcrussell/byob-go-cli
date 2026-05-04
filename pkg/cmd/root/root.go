@@ -27,6 +27,11 @@ func NewCmdRoot(f *cmdutil.Factory) *cobra.Command {
 		// No default action: invoking `byob` with no args prints help.
 		RunE: func(c *cobra.Command, args []string) error { return c.Help() },
 	}
+	// Wrap pflag's flag-parse errors so the runner maps them to exit 2
+	// per byob-errors.1. Cascades to subcommands via cobra inheritance.
+	cmd.SetFlagErrorFunc(func(c *cobra.Command, err error) error {
+		return &cmdutil.FlagError{Err: err}
+	})
 	cmd.AddCommand(splitcmd.NewCmdSplit(f, nil))
 	cmd.AddCommand(joincmd.NewCmdJoin(f, nil))
 	cmd.AddCommand(sitecmd.NewCmdSite(f, nil))
