@@ -44,7 +44,6 @@ main.container {
 }
 main.container.home { display: block; }
 .content { min-width: 0; }
-.content.wide { max-width: 760px; margin: 0 auto; }
 .content.home, main.home > .content { max-width: 900px; margin: 0 auto; }
 
 .sidebar {

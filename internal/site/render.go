@@ -107,6 +107,14 @@ func Render(s *Site, outDir, readmePath string, strict bool, log io.Writer) erro
 		return err
 	}
 
+	// Decisions index page.
+	if err := writePage(tpl, "decisions.html", filepath.Join(outDir, "decisions", "index.html"), pageData{
+		Site:  s,
+		Title: "Decisions — byob-go-cli",
+	}); err != nil {
+		return err
+	}
+
 	// Categories + decisions.
 	for _, c := range s.Categories {
 		if err := writePage(tpl, "category.html", filepath.Join(outDir, c.Slug, "index.html"), pageData{
