@@ -38,7 +38,8 @@ observability, and the packaging and release surface. Once imported,
 `bd list --type decision -l <category>` drills in.
 
 > **Agents:** if you've been asked to apply byob to an existing
-> repo, see [CLAUDE.md](./CLAUDE.md#applying-byob-to-an-existing-repo)
+> repo, see
+> [CLAUDE.md](https://github.com/jcrussell/byob-go-cli/blob/main/CLAUDE.md#applying-byob-to-an-existing-repo)
 > first. The workflow is "seed the target's beads DB from the
 > release, then file task beads" — not "review and fix."
 
