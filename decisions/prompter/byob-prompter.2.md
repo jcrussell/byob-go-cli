@@ -34,7 +34,7 @@ never leak to callers; swapping the impl later is mechanical.
 Tradeoffs:
 
 - **Transitive dep weight.** huh pulls bubbletea + lipgloss. Against
-  byob-dependencies.1's pure-Go minimalism the UX win is worth the weight,
+  byob-release.8's pure-Go minimalism the UX win is worth the weight,
   but it IS a meaningful ask — flag it explicitly in `go.mod`
   review.
 - **Known risk: API churn.** Charmbracelet's ecosystem has shipped

@@ -30,7 +30,7 @@ Idea: split the flag sets:
 just removes local filesystem paths from the binary, which is good
 hygiene regardless.
 
-Pair both with `CGO_ENABLED=0` (byob-dependencies.1) for pure-Go, static
+Pair both with `CGO_ENABLED=0` (byob-release.8) for pure-Go, static
 binaries that cross-compile without a C toolchain.
 
 Reproducibility caveat: `-trimpath` + `-s -w` + `CGO_ENABLED=0` is

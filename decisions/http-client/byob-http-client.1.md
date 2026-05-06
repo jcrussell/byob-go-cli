@@ -16,7 +16,7 @@ labels:
 Problem: `hashicorp/go-retryablehttp`, `go-resty/resty`, and similar
 wrappers bundle retry, logging, auth, and ergonomics into one opaque
 surface. That's convenient until you need to customize one layer —
-then the wrapper's surface fights you. And byob-dependencies.1's pure-Go,
+then the wrapper's surface fights you. And byob-release.8's pure-Go,
 stdlib-first posture would rather not take a dep it can replace with
 60 lines.
 

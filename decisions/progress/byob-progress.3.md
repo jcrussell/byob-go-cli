@@ -60,7 +60,7 @@ Tradeoffs:
   bubbles accepts more ceremony in exchange for an active
   maintainer.
 - **Pure-Go budget intact.** Both bubbletea and schollz honor
-  byob-dependencies.1 (no CGO).
+  byob-release.8 (no CGO).
 
 ## Design
 

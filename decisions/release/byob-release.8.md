@@ -1,14 +1,15 @@
 ---
-id: byob-dependencies.1
-title: 'Pure-Go discipline: CGO_ENABLED=0, pure-Go drivers, go:embed assets'
+id: byob-release.8
+title: 'Pure-Go discipline (CGO_ENABLED=0, go:embed) as the release foundation'
 type: decision
 priority: 2
 status: open
-parent: byob-dependencies
+parent: byob-release
 labels:
   - cli
   - deps-philosophy
   - go
+  - release
 ---
 
 ## Description

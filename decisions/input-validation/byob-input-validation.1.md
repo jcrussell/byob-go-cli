@@ -31,7 +31,7 @@ crosses the trust boundary (flag value, config value, CLI arg):
    escaped `base`.
 
 Wrap both in a helper (`safejoin.Resolve(base, input)`) and use it
-exclusively. Reject with a `FlagErrorf` (byob-errors.3) so the top-level
+exclusively. Reject with a `FlagErrorf` (byob-errors.1) so the top-level
 runner maps to exit 2.
 
 Tradeoffs: `EvalSymlinks` requires the target to exist at resolve

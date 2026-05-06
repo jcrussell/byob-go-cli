@@ -12,5 +12,5 @@ labels:
 
 ## Description
 
-Makefile+ldflags for day-to-day builds; goreleaser for tag-triggered cross-compile, archives, checksums, optional homebrew/nfpm channels. Both paths inject the same ldflags vars so version output is path-independent.
+Pure-Go discipline (CGO_ENABLED=0, go:embed) as the foundation; Makefile+ldflags for day-to-day builds; goreleaser for tag-triggered cross-compile, archives, checksums, optional homebrew/nfpm channels. Both paths inject the same ldflags vars so version output is path-independent.
 
