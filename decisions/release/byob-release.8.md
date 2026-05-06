@@ -1,6 +1,6 @@
 ---
 id: byob-release.8
-title: 'Pure-Go discipline (CGO_ENABLED=0, go:embed) as the release foundation'
+title: Pure-Go discipline (CGO_ENABLED=0, go:embed) as the release foundation
 type: decision
 priority: 2
 status: open

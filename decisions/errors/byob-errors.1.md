@@ -1,6 +1,6 @@
 ---
 id: byob-errors.1
-title: 'Semantic error types and a FlagErrorf helper; top-level runner maps them to exit codes'
+title: Semantic error types and a FlagErrorf helper; top-level runner maps them to exit codes
 type: decision
 priority: 2
 status: open
