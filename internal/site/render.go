@@ -13,6 +13,8 @@ import (
 	"sort"
 	"strings"
 
+	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
+	"github.com/alecthomas/chroma/v2/styles"
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	"github.com/yuin/goldmark/extension"
@@ -325,11 +327,35 @@ func newGoldmark() goldmark.Markdown {
 			extension.GFM,
 			highlighting.NewHighlighting(
 				highlighting.WithStyle("github"),
+				highlighting.WithFormatOptions(chromahtml.WithClasses(true)),
 			),
 		),
 		goldmark.WithParserOptions(parser.WithAutoHeadingID()),
 		goldmark.WithRendererOptions(html.WithUnsafe()),
 	)
+}
+
+// chromaCSS returns a stylesheet for code blocks that pairs the light
+// "github" theme with the dark "github-dark" theme. The dark rules are
+// wrapped in `prefers-color-scheme: dark` so the active theme follows
+// the viewer's OS setting.
+func chromaCSS() ([]byte, error) {
+	f := chromahtml.New()
+	var buf bytes.Buffer
+	buf.WriteString("/* generated from chroma styles: github + github-dark */\n")
+	if err := f.WriteCSS(&buf, styles.Get("github")); err != nil {
+		return nil, fmt.Errorf("write light chroma CSS: %w", err)
+	}
+	buf.WriteString("\n@media (prefers-color-scheme: dark) {\n")
+	var dark bytes.Buffer
+	if err := f.WriteCSS(&dark, styles.Get("github-dark")); err != nil {
+		return nil, fmt.Errorf("write dark chroma CSS: %w", err)
+	}
+	indented := strings.ReplaceAll(strings.TrimRight(dark.String(), "\n"), "\n", "\n  ")
+	buf.WriteString("  ")
+	buf.WriteString(indented)
+	buf.WriteString("\n}\n")
+	return buf.Bytes(), nil
 }
 
 func renderMarkdown(md goldmark.Markdown, src string) template.HTML {
@@ -359,7 +385,7 @@ func writePage(tpl *template.Template, tmpl, outPath string, data pageData) erro
 }
 
 func copyStatic(outDir string) error {
-	return fs.WalkDir(staticFS, "static", func(p string, d fs.DirEntry, err error) error {
+	if err := fs.WalkDir(staticFS, "static", func(p string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -375,7 +401,14 @@ func copyStatic(outDir string) error {
 			return err
 		}
 		return os.WriteFile(dst, data, 0o644)
-	})
+	}); err != nil {
+		return err
+	}
+	css, err := chromaCSS()
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(filepath.Join(outDir, "static", "chroma.css"), css, 0o644)
 }
 
 // splitKeep mirrors the helper in beads/parse.go (kept private here to

@@ -1,6 +1,8 @@
 package site
 
 import (
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -157,6 +159,53 @@ func TestRender_strictFailsOnUnknown(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "byob-mystery.99") {
 		t.Errorf("error should mention the unknown id, got: %v", err)
+	}
+}
+
+func TestRender_codeBlocksUseClasses(t *testing.T) {
+	tmp := t.TempDir()
+	s := newRefSite()
+	s.Categories = []*Category{{
+		Slug: "demo",
+		Epic: &Decision{
+			ID:        "byob-demo",
+			Title:     "Demo",
+			Type:      "epic",
+			Path:      "/demo/",
+			RawDesign: "```go\npackage main\n\nfunc main() { println(\"hi\") }\n```\n",
+		},
+	}}
+	s.Categories[0].Epic.Category = s.Categories[0]
+
+	if err := Render(s, tmp, "", "", false, nil); err != nil {
+		t.Fatalf("Render: %v", err)
+	}
+
+	body, err := os.ReadFile(filepath.Join(tmp, "decisions", "demo", "index.html"))
+	if err != nil {
+		t.Fatalf("read rendered page: %v", err)
+	}
+	got := string(body)
+	if !strings.Contains(got, `class="chroma"`) {
+		t.Errorf("rendered HTML missing class=\"chroma\"; got:\n%s", got)
+	}
+	if strings.Contains(got, `style="background-color`) {
+		t.Errorf("rendered HTML still emits inline background-color; want class-based output")
+	}
+	if !strings.Contains(got, `chroma.css`) {
+		t.Errorf("rendered HTML missing chroma.css stylesheet link; got:\n%s", got)
+	}
+
+	css, err := os.ReadFile(filepath.Join(tmp, "static", "chroma.css"))
+	if err != nil {
+		t.Fatalf("read chroma.css: %v", err)
+	}
+	cssText := string(css)
+	if !strings.Contains(cssText, ".chroma") {
+		t.Errorf("chroma.css missing .chroma rules; got:\n%s", cssText)
+	}
+	if !strings.Contains(cssText, "prefers-color-scheme: dark") {
+		t.Errorf("chroma.css missing dark-mode media query; got:\n%s", cssText)
 	}
 }
 

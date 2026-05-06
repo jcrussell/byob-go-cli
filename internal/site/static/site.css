@@ -23,10 +23,7 @@
     --fg-subtle: #888;
     --bg: #14161a;
     --bg-elevated: #1c1f24;
-    /* --bg-code stays light: Chroma emits inline token colors tuned for a
-       light background, so we keep code blocks as a light island in dark
-       mode rather than clashing tokens against a dark surface. */
-    --bg-code: #f6f8fa;
+    --bg-code: #1c1f24;
     --bg-inline-code: #2a2d33;
     --border: #2a2d33;
     --border-strong: #3a3d44;
