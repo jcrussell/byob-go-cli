@@ -55,7 +55,7 @@ type Progress interface {
     Fail(err error)
 }
 
-// Factory:
+// pkg/cmdutil/factory.go
 func (f *Factory) Progress(ctx context.Context, label string) progress.Progress {
     if f.IOStreams.IsStderrTTY() {
         return progress.NewSpinner(ctx, f.IOStreams.ErrOut, label)

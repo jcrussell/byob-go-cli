@@ -31,22 +31,30 @@ queries — the gap is invisible. Benchmark if you have a hot loop.
 
 ## Design
 
-```go
-// go.mod
+In `go.mod`, prefer pure-Go drivers:
+
+```
 require (
     modernc.org/sqlite v1.x.x
     github.com/spf13/cobra v1.x.x
 )
+```
 
+Embed assets directly into the binary:
+
+```go
 //go:embed migrations/*.sql
 var migrationsFS embed.FS
 
 //go:embed templates/*.tmpl
 var templatesFS embed.FS
+```
 
-// Makefile:
-//   CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" ./cmd/mytool
-//   GOOS=darwin  GOARCH=arm64 CGO_ENABLED=0 go build ...
-//   GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build ...
+Build with CGO off, cross-compile by setting `GOOS`/`GOARCH`:
+
+```sh
+CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" ./cmd/mytool
+GOOS=darwin  GOARCH=arm64 CGO_ENABLED=0 go build ...
+GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build ...
 ```
 

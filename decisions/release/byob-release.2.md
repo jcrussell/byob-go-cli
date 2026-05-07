@@ -42,7 +42,7 @@ minor duplication for the UX win.
 ## Design
 
 ```go
-// pkg/cmd/root/root.go
+// pkg/cmd/root/root.go — inside NewCmdRoot, after creating `root`:
 root.Version = build.Info().Version
 root.SetVersionTemplate("mytool {{.Version}}\n")
 root.AddCommand(cmdversion.NewCmdVersion(f))
