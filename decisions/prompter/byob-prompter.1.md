@@ -6,6 +6,7 @@ priority: 2
 status: open
 parent: byob-prompter
 labels:
+  - context
   - interfaces
   - prompter
 ---

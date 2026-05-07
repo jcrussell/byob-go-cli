@@ -6,6 +6,7 @@ priority: 2
 status: open
 parent: byob-logging
 labels:
+  - context
   - logging
 ---
 

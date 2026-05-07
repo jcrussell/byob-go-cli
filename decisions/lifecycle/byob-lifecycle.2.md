@@ -6,6 +6,8 @@ priority: 2
 status: open
 parent: byob-lifecycle
 labels:
+  - concurrency
+  - context
   - lifecycle
 ---
 

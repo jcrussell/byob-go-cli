@@ -6,6 +6,8 @@ priority: 2
 status: open
 parent: byob-prompter
 labels:
+  - concurrency
+  - context
   - deps-philosophy
   - prompter
 ---
