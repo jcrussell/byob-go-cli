@@ -6,9 +6,7 @@ priority: 2
 status: open
 parent: byob-release
 labels:
-  - cli
   - deps-philosophy
-  - go
   - release
 ---
 

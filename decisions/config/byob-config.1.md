@@ -6,9 +6,7 @@ priority: 2
 status: open
 parent: byob-config
 labels:
-  - cli
   - config
-  - go
 ---
 
 ## Description

@@ -6,9 +6,7 @@ priority: 2
 status: open
 parent: byob-progress
 labels:
-  - cli
   - deps-philosophy
-  - go
   - progress
 ---
 

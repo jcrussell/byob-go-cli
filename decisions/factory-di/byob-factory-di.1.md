@@ -6,9 +6,7 @@ priority: 2
 status: open
 parent: byob-factory-di
 labels:
-  - cli
   - factory-di
-  - go
 ---
 
 ## Description

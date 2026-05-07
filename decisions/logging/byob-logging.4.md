@@ -6,8 +6,6 @@ priority: 2
 status: open
 parent: byob-logging
 labels:
-  - cli
-  - go
   - iostreams
   - logging
 ---

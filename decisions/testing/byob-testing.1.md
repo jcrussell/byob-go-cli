@@ -6,8 +6,6 @@ priority: 2
 status: open
 parent: byob-testing
 labels:
-  - cli
-  - go
   - testing
 ---
 

@@ -6,9 +6,7 @@ priority: 2
 status: open
 parent: byob-progress
 labels:
-  - cli
   - factory-di
-  - go
   - interfaces
   - progress
 ---

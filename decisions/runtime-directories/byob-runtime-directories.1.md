@@ -6,8 +6,6 @@ priority: 2
 status: open
 parent: byob-runtime-directories
 labels:
-  - cli
-  - go
   - state
 ---
 
