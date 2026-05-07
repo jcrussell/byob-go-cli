@@ -335,26 +335,31 @@ func newGoldmark() goldmark.Markdown {
 	)
 }
 
-// chromaCSS returns a stylesheet for code blocks that pairs the light
-// "github" theme with the dark "github-dark" theme. The dark rules are
-// wrapped in `prefers-color-scheme: dark` so the active theme follows
-// the viewer's OS setting.
+// chromaCSS returns a stylesheet for code blocks that pairs the "github"
+// (light) and "github-dark" themes. Each theme is wrapped in its own
+// `prefers-color-scheme` media query so they're mutually exclusive — this
+// is the only safe way to mix two chroma styles in one stylesheet, since
+// rules outside any media query would otherwise leak through to the
+// non-matching mode (e.g. light's `.chroma .nx { color:#1f2328 }`
+// painting package names dark-on-dark in dark mode).
 func chromaCSS() ([]byte, error) {
 	f := chromahtml.New()
 	var buf bytes.Buffer
 	buf.WriteString("/* generated from chroma styles: github + github-dark */\n")
-	if err := f.WriteCSS(&buf, styles.Get("github")); err != nil {
-		return nil, fmt.Errorf("write light chroma CSS: %w", err)
+	for _, t := range []struct {
+		scheme, style string
+	}{
+		{"light", "github"},
+		{"dark", "github-dark"},
+	} {
+		var inner bytes.Buffer
+		if err := f.WriteCSS(&inner, styles.Get(t.style)); err != nil {
+			return nil, fmt.Errorf("write %s chroma CSS: %w", t.scheme, err)
+		}
+		fmt.Fprintf(&buf, "\n@media (prefers-color-scheme: %s) {\n  ", t.scheme)
+		buf.WriteString(strings.ReplaceAll(strings.TrimRight(inner.String(), "\n"), "\n", "\n  "))
+		buf.WriteString("\n}\n")
 	}
-	buf.WriteString("\n@media (prefers-color-scheme: dark) {\n")
-	var dark bytes.Buffer
-	if err := f.WriteCSS(&dark, styles.Get("github-dark")); err != nil {
-		return nil, fmt.Errorf("write dark chroma CSS: %w", err)
-	}
-	indented := strings.ReplaceAll(strings.TrimRight(dark.String(), "\n"), "\n", "\n  ")
-	buf.WriteString("  ")
-	buf.WriteString(indented)
-	buf.WriteString("\n}\n")
 	return buf.Bytes(), nil
 }
 

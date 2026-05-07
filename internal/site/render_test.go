@@ -204,8 +204,20 @@ func TestRender_codeBlocksUseClasses(t *testing.T) {
 	if !strings.Contains(cssText, ".chroma") {
 		t.Errorf("chroma.css missing .chroma rules; got:\n%s", cssText)
 	}
-	if !strings.Contains(cssText, "prefers-color-scheme: dark") {
+	if !strings.Contains(cssText, "@media (prefers-color-scheme: dark)") {
 		t.Errorf("chroma.css missing dark-mode media query; got:\n%s", cssText)
+	}
+	// Each theme must be scoped to its own media query — otherwise the
+	// light theme's dark-color rules (e.g. `.chroma .nx { color:#1f2328 }`
+	// for package names and identifiers) leak into dark mode and render
+	// dark-on-dark. Guard against a regression where light rules appear
+	// outside any media query.
+	if !strings.Contains(cssText, "@media (prefers-color-scheme: light)") {
+		t.Errorf("chroma.css missing light-mode media query; got:\n%s", cssText)
+	}
+	prelude, _, _ := strings.Cut(cssText, "@media")
+	if strings.Contains(prelude, ".chroma") {
+		t.Errorf("chroma rules emitted outside any @media block — they will leak across schemes; got prelude:\n%s", prelude)
 	}
 }
 
