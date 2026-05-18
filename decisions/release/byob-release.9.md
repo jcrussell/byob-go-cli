@@ -81,3 +81,4 @@ floor is the wrong shape for the codebase as it stands — narrow it
 in one PR. A change that splits into "land the config, land the
 cleanup" with weeks in between is exactly the deferred-cleanup failure
 mode this decision exists to prevent.
+

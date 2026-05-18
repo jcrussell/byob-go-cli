@@ -96,3 +96,4 @@ func TestDryRunDoesNotWrite(t *testing.T) {
 Here the no-op behavior *is* the user-visible contract of `--dry-run`,
 so asserting on the absence of the call is the same as asserting on
 behavior. The shape is the exception, not the default.
+

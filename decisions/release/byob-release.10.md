@@ -103,3 +103,4 @@ Test for a proposed new dep:
 If steps 1–4 all clear, add the dep and the corresponding decision
 bead in the same PR. A new dep without a decision is the shape that
 accretes into an unmaintainable `go.sum` over time.
+

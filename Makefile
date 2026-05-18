@@ -12,7 +12,7 @@ help:
 	@echo "  make clean    Remove decisions/, memories/, and _site/"
 
 export:
-	@bd export 2>/dev/null | go run ./cmd/byob split
+	@bd export --include-memories 2>/dev/null | go run ./cmd/byob split
 	@go run ./cmd/byob join > .beads/issues.jsonl
 	@echo "Wrote .beads/issues.jsonl ($$(wc -l < .beads/issues.jsonl) records)"
 

@@ -98,3 +98,4 @@ The `runF` field on Options is what makes step 2 cheap. Without it,
 every test would route through cobra (`cmd.Execute()`), which is fine
 for the integration test in step 4 but heavyweight for the unit tests
 in step 2.
+
