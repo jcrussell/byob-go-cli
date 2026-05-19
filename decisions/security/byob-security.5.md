@@ -1,7 +1,7 @@
 ---
 id: byob-security.5
 title: Pin GitHub Actions by SHA; scope permissions to minimum
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-security

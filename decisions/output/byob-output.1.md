@@ -1,7 +1,7 @@
 ---
 id: byob-output.1
 title: 'TTY-adaptive table printer: one API, two render paths'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-output

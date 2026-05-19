@@ -1,7 +1,7 @@
 ---
 id: byob-input-validation.5
 title: Validate at the Options boundary; fail with FlagErrorf before side effects
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-input-validation

@@ -1,7 +1,7 @@
 ---
 id: byob-http-client.1
 title: net/http + RoundTripper middleware chain, not retryablehttp/resty
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-http-client

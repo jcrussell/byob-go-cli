@@ -1,7 +1,7 @@
 ---
 id: byob-release.4
 title: goreleaser owns the release cross-compile matrix
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-release

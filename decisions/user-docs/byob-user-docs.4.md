@@ -1,7 +1,7 @@
 ---
 id: byob-user-docs.4
 title: Release notes from git history; no hand-maintained CHANGELOG
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-user-docs

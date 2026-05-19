@@ -1,7 +1,7 @@
 ---
 id: byob-runtime-directories
 title: Runtime directories
-type: epic
+type: byob
 priority: 2
 status: open
 labels:

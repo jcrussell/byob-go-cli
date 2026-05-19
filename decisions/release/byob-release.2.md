@@ -1,7 +1,7 @@
 ---
 id: byob-release.2
 title: version subcommand + --version flag on root
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-release

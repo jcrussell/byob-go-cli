@@ -1,7 +1,7 @@
 ---
 id: byob-storage.3
 title: Hand-rolled go:embed migration runner with per-migration transactions
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-storage

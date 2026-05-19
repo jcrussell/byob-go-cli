@@ -1,7 +1,7 @@
 ---
 id: byob-storage.1
 title: Per-backend Store implementations; no query builder, no ORM
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-storage

@@ -1,7 +1,7 @@
 ---
 id: byob-input-validation.4
 title: Every SQL statement uses placeholders; never string-concatenated values
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-input-validation

@@ -1,7 +1,7 @@
 ---
 id: byob-command-shape.7
 title: Implement pflag.Value for custom flag types
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-command-shape

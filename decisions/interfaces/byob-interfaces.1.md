@@ -1,7 +1,7 @@
 ---
 id: byob-interfaces.1
 title: Define interfaces in the consumer package, narrow to what's used
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-interfaces

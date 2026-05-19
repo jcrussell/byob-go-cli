@@ -1,7 +1,7 @@
 ---
 id: byob-user-docs.3
 title: Invest in `--help` Long descriptions and Example blocks
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-user-docs

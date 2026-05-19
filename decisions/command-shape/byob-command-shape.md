@@ -1,7 +1,7 @@
 ---
 id: byob-command-shape
 title: Command shape
-type: epic
+type: byob
 priority: 2
 status: open
 labels:

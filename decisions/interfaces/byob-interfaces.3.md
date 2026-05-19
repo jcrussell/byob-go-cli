@@ -1,7 +1,7 @@
 ---
 id: byob-interfaces.3
 title: Accept fs.FS at package boundaries for filesystem seams
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-interfaces

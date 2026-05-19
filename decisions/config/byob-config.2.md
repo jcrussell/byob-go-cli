@@ -1,7 +1,7 @@
 ---
 id: byob-config.2
 title: 'Layered config with provenance: env > file > default'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-config

@@ -1,7 +1,7 @@
 ---
 id: byob-input-validation
 title: Input validation
-type: epic
+type: byob
 priority: 2
 status: open
 labels:

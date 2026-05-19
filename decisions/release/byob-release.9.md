@@ -1,7 +1,7 @@
 ---
 id: byob-release.9
 title: Lint config lands first; fix lint findings as they appear
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-release

@@ -1,7 +1,7 @@
 ---
 id: byob-interfaces.2
 title: Accept interfaces, return concrete types
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-interfaces

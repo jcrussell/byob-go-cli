@@ -1,7 +1,7 @@
 ---
 id: byob-lifecycle.1
 title: Thread context.Context through every runFunc
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-lifecycle

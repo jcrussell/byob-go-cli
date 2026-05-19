@@ -1,7 +1,7 @@
 ---
 id: byob-release
 title: Release
-type: epic
+type: byob
 priority: 2
 status: open
 labels:

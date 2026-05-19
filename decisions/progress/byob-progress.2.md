@@ -1,7 +1,7 @@
 ---
 id: byob-progress.2
 title: 'TTY-adaptive: spinner on TTY, rate-limited chatter lines off-TTY'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-progress

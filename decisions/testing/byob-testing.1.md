@@ -1,7 +1,7 @@
 ---
 id: byob-testing.1
 title: Inject test doubles through the Factory; never monkey-patch globals
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-testing

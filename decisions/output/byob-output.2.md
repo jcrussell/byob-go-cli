@@ -1,7 +1,7 @@
 ---
 id: byob-output.2
 title: Opt-in structured export via --json / --jq / --template
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-output

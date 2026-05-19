@@ -1,7 +1,7 @@
 ---
 id: byob-testing.4
 title: Tests land with the code, not after
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-testing

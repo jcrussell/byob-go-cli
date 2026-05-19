@@ -1,7 +1,7 @@
 ---
 id: byob-release.3
 title: Makefile is the day-to-day entrypoint
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-release

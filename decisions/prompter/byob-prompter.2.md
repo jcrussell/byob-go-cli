@@ -1,7 +1,7 @@
 ---
 id: byob-prompter.2
 title: 'Library pick: charmbracelet/huh for the live prompter'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-prompter

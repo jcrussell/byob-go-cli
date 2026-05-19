@@ -1,7 +1,7 @@
 ---
 id: byob-security
 title: Security
-type: epic
+type: byob
 priority: 2
 status: open
 labels:

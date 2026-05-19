@@ -1,7 +1,7 @@
 ---
 id: byob-user-docs.5
 title: Troubleshooting page keyed by ErrHint anchors
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-user-docs

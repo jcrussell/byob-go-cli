@@ -1,7 +1,7 @@
 ---
 id: byob-input-validation.3
 title: Never shell out through `sh -c`; always `exec.CommandContext` with fixed argv
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-input-validation

@@ -1,7 +1,7 @@
 ---
 id: byob-prompter.3
 title: Refuse to prompt when stdin is not a TTY
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-prompter

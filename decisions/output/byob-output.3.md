@@ -1,7 +1,7 @@
 ---
 id: byob-output.3
 title: Generate reference docs (Markdown, man pages) from the cobra tree
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-output

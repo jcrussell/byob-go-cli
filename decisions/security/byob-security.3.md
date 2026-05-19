@@ -1,7 +1,7 @@
 ---
 id: byob-security.3
 title: Emit SBOMs and cosign signatures from the release workflow
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-security

@@ -1,7 +1,7 @@
 ---
 id: byob-logging.4
 title: Logs and chatter share ErrOut; quiet default keeps them separate
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-logging

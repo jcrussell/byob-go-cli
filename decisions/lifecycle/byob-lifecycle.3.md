@@ -1,7 +1,7 @@
 ---
 id: byob-lifecycle.3
 title: '`errgroup` as the goroutine-fanout default'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-lifecycle

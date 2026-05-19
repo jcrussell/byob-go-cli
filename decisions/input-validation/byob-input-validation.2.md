@@ -1,7 +1,7 @@
 ---
 id: byob-input-validation.2
 title: Validate parsed config shape explicitly before trusting it
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-input-validation

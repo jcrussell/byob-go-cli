@@ -1,7 +1,7 @@
 ---
 id: byob-release.5
 title: 'Release workflow: tag-triggered GHA invokes goreleaser'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-release

@@ -1,7 +1,7 @@
 ---
 id: byob-testing.2
 title: '`go-cmp` for non-trivial test comparisons'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-testing

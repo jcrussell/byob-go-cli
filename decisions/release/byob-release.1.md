@@ -1,7 +1,7 @@
 ---
 id: byob-release.1
 title: Version via -ldflags -X into a dedicated build package
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-release

@@ -1,7 +1,7 @@
 ---
 id: byob-command-shape.4
 title: Ship shell completions via cobra's completion subcommand
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-command-shape

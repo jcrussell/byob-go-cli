@@ -1,7 +1,7 @@
 ---
 id: byob-release.10
 title: Stdlib-first; reach for deps only when the stdlib is genuinely insufficient
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-release

@@ -1,7 +1,7 @@
 ---
 id: byob-storage.6
 title: In-memory sqlite default; same Store contract suite runs on both backends
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-storage

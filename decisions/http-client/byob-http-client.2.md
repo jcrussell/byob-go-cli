@@ -1,7 +1,7 @@
 ---
 id: byob-http-client.2
 title: HTTPClient on the Factory as a lazy closure with tuned timeouts
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-http-client

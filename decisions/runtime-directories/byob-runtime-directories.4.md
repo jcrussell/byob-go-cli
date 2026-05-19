@@ -1,7 +1,7 @@
 ---
 id: byob-runtime-directories.4
 title: 'State schema versioning: refuse newer, upgrade older'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-runtime-directories

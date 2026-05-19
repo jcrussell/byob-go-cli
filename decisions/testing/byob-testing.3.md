@@ -1,7 +1,7 @@
 ---
 id: byob-testing.3
 title: Assert on behavior, not implementation
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-testing

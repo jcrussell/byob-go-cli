@@ -38,11 +38,13 @@ func (c *Category) Title() string {
 	return c.Slug
 }
 
-// Decision is one rendered decision or epic page.
+// Decision is one rendered byob page (either a category's root or a child).
+// The parentless file in a category directory is the category root; everything
+// else is a child. See loadCategory in walk.go.
 type Decision struct {
 	ID       string
 	Title    string
-	Type     string // "decision" or "epic"
+	Type     string
 	ParentID string
 	Labels   []string
 
@@ -58,9 +60,6 @@ type Decision struct {
 	Prev     *Decision
 	Next     *Decision
 }
-
-// IsEpic reports whether this Decision is the category's epic page.
-func (d *Decision) IsEpic() bool { return d.Type == "epic" }
 
 // Memory is one memory entry; HTML is the rendered body.
 type Memory struct {

@@ -96,7 +96,7 @@ func splitRun(opts *Options) error {
 		if head.ID == "" {
 			continue
 		}
-		if head.IssueType != "decision" && head.IssueType != "epic" {
+		if head.IssueType != "byob" {
 			key := head.IssueType
 			if key == "" {
 				key = "<missing>"

@@ -1,7 +1,7 @@
 ---
 id: byob-iostreams.1
 title: IOStreams wraps In/Out/ErrOut + TTY flags; commands never touch os.Std*
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-iostreams

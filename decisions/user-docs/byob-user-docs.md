@@ -1,7 +1,7 @@
 ---
 id: byob-user-docs
 title: User docs
-type: epic
+type: byob
 priority: 2
 status: open
 labels:

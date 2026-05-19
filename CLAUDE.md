@@ -30,14 +30,23 @@ cd <target-repo>
 #    existing issues.
 [ -d .beads ] || BD_NON_INTERACTIVE=1 bd init --prefix <project-prefix>
 
-# 2. Download the latest byob release artifact and import it.
+# 2. Register byob's custom issue type (additive — preserves any
+#    types.custom you've already configured). bd import rejects the
+#    library records without this.
+current=$(bd config get types.custom 2>/dev/null)
+case "$current" in *"(not set)"*) current="" ;; esac
+bd config set types.custom "${current:+$current,}byob"
+
+# 3. Download the latest byob release artifact and import it.
 curl -L -o /tmp/byob-decisions.jsonl \
   https://github.com/<user>/byob-go-cli/releases/latest/download/issues.jsonl
 bd import /tmp/byob-decisions.jsonl
 
-# 3. Confirm the decisions and memories landed.
-bd prime                              # memories auto-inject here
-bd list --type decision | head        # decisions are browsable
+# 4. Confirm the decisions and memories landed.
+bd prime                                    # memories auto-inject here
+bd list --type=byob --no-parent | head      # ~20 category roots
+bd list --type=byob -l errors               # drill into one category
+bd ready --exclude-type=byob                # your own work, byob hidden
 bd show $(bd list -l onboarding --json | jq -r '.[0].id')
 ```
 
@@ -97,9 +106,10 @@ agents discover them.
   corpus. Reserve it for idioms that compress to "RULE: X. WHY:
   short rationale" and apply broadly.
 - **Decision** (`decisions/<slug>/<id>.md`) — Problem / Idea / Tradeoffs /
-  Sketch, queried on demand via `bd list --type decision -l
-  <category>` and `bd show <id>`. Unlimited growth budget — adding a
-  new decision costs nothing until an agent actually looks at it.
+  Sketch, queried on demand via `bd list --type=byob -l errors`
+  (or any category label) and `bd show <id>`. Unlimited growth
+  budget — adding a new decision costs nothing until an agent
+  actually looks at it.
 
 If a candidate recipe has any of these, it's a decision, not a memory:
 

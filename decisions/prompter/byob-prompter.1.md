@@ -1,7 +1,7 @@
 ---
 id: byob-prompter.1
 title: Prompter as a narrow consumer interface
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-prompter

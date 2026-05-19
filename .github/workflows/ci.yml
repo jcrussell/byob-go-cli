@@ -30,6 +30,9 @@ jobs:
           # --skip-agents: byob ships its own CLAUDE.md; do not let
           # bd re-inject its boilerplate block and trip the drift check.
           BD_NON_INTERACTIVE=1 bd init --prefix byob --skip-agents
+          # Register the custom "byob" type so bd import accepts the
+          # library records on the next step.
+          bd config set types.custom "byob"
 
       - name: Drift check — committed markdown must round-trip cleanly
         run: |

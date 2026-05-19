@@ -1,7 +1,7 @@
 ---
 id: byob-logging.1
 title: slog as the logger, stdlib only
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-logging

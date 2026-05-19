@@ -1,7 +1,7 @@
 ---
 id: byob-logging.2
 title: Logger on the Factory, injected into context
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-logging

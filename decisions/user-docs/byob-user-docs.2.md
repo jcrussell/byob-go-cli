@@ -1,7 +1,7 @@
 ---
 id: byob-user-docs.2
 title: Reference generated from cobra; narrative docs cover concepts only
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-user-docs

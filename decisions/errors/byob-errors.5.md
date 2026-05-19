@@ -1,7 +1,7 @@
 ---
 id: byob-errors.5
 title: Function signatures return `error`, not the concrete error type
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-errors

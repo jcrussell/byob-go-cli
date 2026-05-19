@@ -1,7 +1,7 @@
 ---
 id: byob-errors.2
 title: Attachable ErrHint wrapper carries remediation text
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-errors

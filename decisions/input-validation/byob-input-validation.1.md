@@ -1,7 +1,7 @@
 ---
 id: byob-input-validation.1
 title: Resolve and containment-check every user-supplied path
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-input-validation

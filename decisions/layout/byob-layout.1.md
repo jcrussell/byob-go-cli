@@ -1,7 +1,7 @@
 ---
 id: byob-layout.1
 title: 'Three-tier layout: cmd/<bin> -> internal/<bin>cmd -> pkg/cmd/<feature>'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-layout

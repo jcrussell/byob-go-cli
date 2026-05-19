@@ -1,7 +1,7 @@
 ---
 id: byob-factory-di.1
 title: Central Factory with lazy closures for expensive dependencies
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-factory-di

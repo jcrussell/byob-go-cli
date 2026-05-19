@@ -1,7 +1,7 @@
 ---
 id: byob-iostreams
 title: IOStreams
-type: epic
+type: byob
 priority: 2
 status: open
 labels:

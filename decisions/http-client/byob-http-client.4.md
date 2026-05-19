@@ -1,7 +1,7 @@
 ---
 id: byob-http-client.4
 title: Test HTTP via httptest.NewServer, not gock/httpmock
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-http-client

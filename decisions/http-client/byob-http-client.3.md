@@ -1,7 +1,7 @@
 ---
 id: byob-http-client.3
 title: 'Retry policy: bounded exponential + jitter, idempotent-by-default, Retry-After aware'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-http-client

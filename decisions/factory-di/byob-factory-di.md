@@ -1,7 +1,7 @@
 ---
 id: byob-factory-di
 title: Factory + DI
-type: epic
+type: byob
 priority: 2
 status: open
 labels:

@@ -1,7 +1,7 @@
 ---
 id: byob-interfaces
 title: Interfaces
-type: epic
+type: byob
 priority: 2
 status: open
 labels:

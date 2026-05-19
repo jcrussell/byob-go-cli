@@ -1,7 +1,7 @@
 ---
 id: byob-security.2
 title: Run govulncheck in CI on every push
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-security

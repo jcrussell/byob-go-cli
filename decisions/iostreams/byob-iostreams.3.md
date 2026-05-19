@@ -1,7 +1,7 @@
 ---
 id: byob-iostreams.3
 title: Data to Out, chatter and prompts to ErrOut
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-iostreams

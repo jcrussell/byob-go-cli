@@ -1,7 +1,7 @@
 ---
 id: byob-iostreams.2
 title: ColorScheme honors NO_COLOR + TTY, degrades to identity function
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-iostreams

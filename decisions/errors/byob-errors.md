@@ -1,7 +1,7 @@
 ---
 id: byob-errors
 title: Errors
-type: epic
+type: byob
 priority: 2
 status: open
 labels:

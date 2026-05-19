@@ -10,7 +10,7 @@ func TestBeadRoundtrip(t *testing.T) {
 	in := &Bead{
 		ID:        "byob-foo.1",
 		Title:     "A title with \"quotes\"",
-		IssueType: "decision",
+		IssueType: "byob",
 		Priority:  2,
 		Status:    "open",
 		// ToMarkdown sorts labels; declare them sorted so the

@@ -1,7 +1,7 @@
 ---
 id: byob-progress
 title: Progress
-type: epic
+type: byob
 priority: 2
 status: open
 labels:

@@ -1,7 +1,7 @@
 ---
 id: byob-output
 title: Output
-type: epic
+type: byob
 priority: 2
 status: open
 labels:

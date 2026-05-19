@@ -1,7 +1,7 @@
 ---
 id: byob-runtime-directories.1
 title: 'Four-directory model: config / cache / state / data'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-runtime-directories

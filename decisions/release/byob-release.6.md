@@ -1,7 +1,7 @@
 ---
 id: byob-release.6
 title: 'Reproducibility flags: -trimpath always, -s -w on release only'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-release

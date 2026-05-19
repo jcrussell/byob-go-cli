@@ -1,7 +1,7 @@
 ---
 id: byob-config.1
 title: Walk-up-from-cwd to find project-scoped config
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-config

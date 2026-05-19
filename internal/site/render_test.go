@@ -146,7 +146,7 @@ func TestRender_strictFailsOnUnknown(t *testing.T) {
 		Epic: &Decision{
 			ID:             "byob-demo",
 			Title:          "Demo",
-			Type:           "epic",
+			Type:           "byob",
 			Path:           "/demo/",
 			RawDescription: "Refs byob-mystery.99.",
 		},
@@ -170,7 +170,7 @@ func TestRender_codeBlocksUseClasses(t *testing.T) {
 		Epic: &Decision{
 			ID:        "byob-demo",
 			Title:     "Demo",
-			Type:      "epic",
+			Type:      "byob",
 			Path:      "/demo/",
 			RawDesign: "```go\npackage main\n\nfunc main() { println(\"hi\") }\n```\n",
 		},
@@ -229,7 +229,7 @@ func TestRender_nonStrictTolerantOfUnknown(t *testing.T) {
 		Epic: &Decision{
 			ID:             "byob-demo",
 			Title:          "Demo",
-			Type:           "epic",
+			Type:           "byob",
 			Path:           "/demo/",
 			RawDescription: "Refs byob-mystery.99.",
 		},

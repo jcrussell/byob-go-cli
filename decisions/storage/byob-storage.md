@@ -1,7 +1,7 @@
 ---
 id: byob-storage
 title: Storage
-type: epic
+type: byob
 priority: 2
 status: open
 labels:

@@ -98,11 +98,10 @@ func loadCategory(dir, slug string) (*Category, error) {
 			RawDescription: b.Description,
 			RawDesign:      b.Design,
 		}
-		// A category's "epic" is the parentless file in the directory —
-		// usually type=epic, but a few one-off categories (e.g.
-		// agent-onboarding) have a single parentless decision instead.
-		// Two parentless files is a data bug we want to fail loud on,
-		// not silently let the second clobber the first.
+		// A category's root is the parentless file in the directory;
+		// children have a parent: field. Two parentless files is a
+		// data bug we want to fail loud on, not silently let the
+		// second clobber the first.
 		if d.ParentID == "" {
 			if cat.Epic != nil {
 				return nil, fmt.Errorf("%s: multiple parentless files (%s and %s); a category needs exactly one epic",

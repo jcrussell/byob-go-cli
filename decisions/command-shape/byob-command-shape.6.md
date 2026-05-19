@@ -1,7 +1,7 @@
 ---
 id: byob-command-shape.6
 title: Cobra flag-group helpers over hand-rolled validation
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-command-shape

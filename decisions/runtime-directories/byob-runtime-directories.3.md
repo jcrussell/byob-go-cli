@@ -1,7 +1,7 @@
 ---
 id: byob-runtime-directories.3
 title: 'Atomic writes: temp-in-same-dir + fsync + rename; flock for read-modify-write'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-runtime-directories

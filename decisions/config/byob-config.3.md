@@ -1,7 +1,7 @@
 ---
 id: byob-config.3
 title: Lazy config load behind a factory closure
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-config

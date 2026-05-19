@@ -1,7 +1,7 @@
 ---
 id: byob-command-shape.5
 title: PersistentPreRunE on root for app-wide middleware
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-command-shape

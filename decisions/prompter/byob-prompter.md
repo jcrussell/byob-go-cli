@@ -1,7 +1,7 @@
 ---
 id: byob-prompter
 title: Prompter
-type: epic
+type: byob
 priority: 2
 status: open
 labels:

@@ -1,7 +1,7 @@
 ---
 id: byob-progress.4
 title: Progress writes to ErrOut, never Out
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-progress

@@ -1,7 +1,7 @@
 ---
 id: byob-lifecycle.2
 title: Wire Ctrl-C / SIGTERM via signal.NotifyContext in main
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-lifecycle

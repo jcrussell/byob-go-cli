@@ -1,7 +1,7 @@
 ---
 id: byob-runtime-directories.2
 title: Paths on the Factory as a lazy field
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-runtime-directories

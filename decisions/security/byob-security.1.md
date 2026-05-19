@@ -1,7 +1,7 @@
 ---
 id: byob-security.1
 title: Pin Go dependencies by exact version; never `@latest` in CI
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-security

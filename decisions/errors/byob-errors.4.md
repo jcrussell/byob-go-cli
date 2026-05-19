@@ -1,7 +1,7 @@
 ---
 id: byob-errors.4
 title: SilenceUsage and SilenceErrors on the root command
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-errors

@@ -1,7 +1,7 @@
 ---
 id: byob-user-docs.1
 title: README is orient-and-quickstart, not a reference
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-user-docs

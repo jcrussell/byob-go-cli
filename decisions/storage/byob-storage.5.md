@@ -1,7 +1,7 @@
 ---
 id: byob-storage.5
 title: 'Timestamps: audit fields in DDL, business-logic fields in Go'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-storage

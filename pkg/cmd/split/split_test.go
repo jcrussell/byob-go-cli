@@ -32,8 +32,8 @@ func TestNewCmdSplit_runFOverride(t *testing.T) {
 func TestSplitRun_writesDecisionAndMemoryFiles(t *testing.T) {
 	tmp := t.TempDir()
 	jsonl := strings.Join([]string{
-		`{"id":"x","title":"X Cat","issue_type":"epic","priority":2,"status":"open","dependencies":[]}`,
-		`{"id":"x.1","title":"First Child","issue_type":"decision","priority":2,"status":"open","dependencies":[{"issue_id":"x.1","depends_on_id":"x","type":"parent-child","metadata":"{}"}]}`,
+		`{"id":"x","title":"X Cat","issue_type":"byob","priority":2,"status":"open","dependencies":[]}`,
+		`{"id":"x.1","title":"First Child","issue_type":"byob","priority":2,"status":"open","dependencies":[{"issue_id":"x.1","depends_on_id":"x","type":"parent-child","metadata":"{}"}]}`,
 		`{"_type":"memory","key":"errors-wrap-w","value":"Wrap with %w."}`,
 		`{"id":"task.1","title":"Some Task","issue_type":"task"}`,
 		"",
@@ -61,7 +61,7 @@ func TestSplitRun_writesDecisionAndMemoryFiles(t *testing.T) {
 			t.Errorf("expected %s: %v", p, err)
 		}
 	}
-	// Tasks (non-decision/non-epic) must be skipped, not written.
+	// Non-byob records (here, a task) must be skipped, not written.
 	if matches, _ := filepath.Glob(filepath.Join(tmp, "decisions", "*", "task*.md")); len(matches) != 0 {
 		t.Errorf("task issue should have been skipped, got %v", matches)
 	}

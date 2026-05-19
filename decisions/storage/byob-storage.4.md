@@ -1,7 +1,7 @@
 ---
 id: byob-storage.4
 title: withTx(ctx, fn) helper with explicit commit/rollback branching
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-storage

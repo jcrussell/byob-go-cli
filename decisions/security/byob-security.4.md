@@ -1,7 +1,7 @@
 ---
 id: byob-security.4
 title: Secrets from env or OS keyring only; never as flag values
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-security

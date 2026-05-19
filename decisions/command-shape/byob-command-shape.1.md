@@ -1,7 +1,7 @@
 ---
 id: byob-command-shape.1
 title: Three-part command shape with a runF test-injection hook
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-command-shape

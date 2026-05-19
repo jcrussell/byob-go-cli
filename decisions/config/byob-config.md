@@ -1,7 +1,7 @@
 ---
 id: byob-config
 title: Config
-type: epic
+type: byob
 priority: 2
 status: open
 labels:

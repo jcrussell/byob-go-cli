@@ -1,7 +1,7 @@
 ---
 id: byob-logging.3
 title: 'Verbosity ladder: -v / -vv / --log-level on root'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-logging

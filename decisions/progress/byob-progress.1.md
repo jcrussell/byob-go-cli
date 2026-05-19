@@ -1,7 +1,7 @@
 ---
 id: byob-progress.1
 title: Progress as a narrow interface on the Factory
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-progress

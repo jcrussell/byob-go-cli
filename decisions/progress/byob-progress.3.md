@@ -1,7 +1,7 @@
 ---
 id: byob-progress.3
 title: 'Library pick: bubbles/spinner + schollz/progressbar, wrapped'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-progress

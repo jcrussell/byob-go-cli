@@ -1,7 +1,7 @@
 ---
 id: byob-prompter.5
 title: --yes / -y destructive-action override
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-prompter

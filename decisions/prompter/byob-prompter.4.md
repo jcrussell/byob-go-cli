@@ -1,7 +1,7 @@
 ---
 id: byob-prompter.4
 title: Test prompter is a scripted FIFO stub
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-prompter

@@ -34,9 +34,9 @@ func TestSiteSmoke_writesExpectedFiles(t *testing.T) {
 
 	mustMkdir(t, filepath.Join(dec, "demo"))
 	mustWrite(t, filepath.Join(dec, "demo", "demo-epic.md"),
-		"---\nid: demo-epic\ntitle: Demo Epic\ntype: epic\npriority: 2\nstatus: open\nlabels: []\n---\n\n## Description\n\nIntro.\n")
+		"---\nid: demo-epic\ntitle: Demo Epic\ntype: byob\npriority: 2\nstatus: open\nlabels: []\n---\n\n## Description\n\nIntro.\n")
 	mustWrite(t, filepath.Join(dec, "demo", "demo.1.md"),
-		"---\nid: demo.1\ntitle: First\ntype: decision\npriority: 2\nstatus: open\nparent: demo-epic\nlabels: []\n---\n\n## Description\n\nSee demo-epic for context.\n")
+		"---\nid: demo.1\ntitle: First\ntype: byob\npriority: 2\nstatus: open\nparent: demo-epic\nlabels: []\n---\n\n## Description\n\nSee demo-epic for context.\n")
 	mustMkdir(t, mem)
 	mustWrite(t, filepath.Join(mem, "tip.md"),
 		"---\nkey: tip\n---\n\nA tip.\n")

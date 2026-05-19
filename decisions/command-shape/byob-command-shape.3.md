@@ -1,7 +1,7 @@
 ---
 id: byob-command-shape.3
 title: Cobra command groups for semantic help; root only aggregates
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-command-shape

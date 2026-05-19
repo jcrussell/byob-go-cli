@@ -1,7 +1,7 @@
 ---
 id: byob-http-client.5
 title: 'User-Agent: <tool>/<version> (<os>; <arch>)'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-http-client

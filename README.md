@@ -23,19 +23,22 @@ following those decisions.
 
 Two layers of guidance live in the beads DB:
 
-1. **Decisions** — architectural decisions grouped into category
-   epics. Full Problem / Idea / Tradeoffs / Sketch template.
-   Consulted on demand via `bd list --type decision` and `bd show`.
+1. **Library beads** — architectural decisions grouped into
+   categories, shipped under a custom `byob` issue type so they're
+   distinguishable from your project's own work. Full Problem /
+   Idea / Tradeoffs / Sketch template. Consulted on demand via
+   `bd list --type=byob` and `bd show`.
 2. **Memories** — one-line idiomatic tips (e.g. "wrap errors with
    `%w`", "use `sync.OnceValue`", "call `t.Helper()` in test helpers").
    These auto-inject into every agent session via `bd prime`, so they
    are always-on context without ceremony.
 
-Decisions are grouped under category epics covering the breadth of a
-Go CLI — architectural choices, CLI ergonomics, testing patterns,
-observability, and the packaging and release surface. Once imported,
-`bd list --type epic` enumerates the categories, and
-`bd list --type decision -l <category>` drills in.
+Library beads are grouped under category roots (parentless beads)
+covering the breadth of a Go CLI — architectural choices, CLI
+ergonomics, testing patterns, observability, and the packaging and
+release surface. Once imported, `bd list --type=byob --no-parent`
+enumerates the categories, and `bd list --type=byob -l errors` (or
+any category label) drills in.
 
 > **Agents:** if you've been asked to apply byob to an existing
 > repo, see
@@ -58,14 +61,21 @@ target project already has a beads workspace.
 mkdir ~/repos/mytool && cd ~/repos/mytool
 git init
 BD_NON_INTERACTIVE=1 bd init --prefix mytool
+# Register byob's custom issue type so bd import accepts the
+# library records.
+current=$(bd config get types.custom 2>/dev/null)
+case "$current" in *"(not set)"*) current="" ;; esac
+bd config set types.custom "${current:+$current,}byob"
 curl -L -o /tmp/byob-decisions.jsonl \
   https://github.com/<user>/byob-go-cli/releases/latest/download/issues.jsonl
 bd import /tmp/byob-decisions.jsonl
 ```
 
 The new project now has its own prefix (`mytool-*`) for future task
-beads plus every byob decision and memory pre-loaded. Browse decisions
-with `bd list --type decision`; see the tip layer with `bd memories`.
+beads plus every byob bead and memory pre-loaded. Browse the
+library with `bd list --type=byob --no-parent` for the category
+roots or `bd list --type=byob -l errors` to drill into one. See
+the tip layer with `bd memories`.
 
 Write your own `AGENTS.md` for the new project — byob does not ship
 agent docs into forks. A minimal starter:
@@ -80,10 +90,12 @@ agent docs into forks. A minimal starter:
 
 ## What lives where
 
-- `bd list --type decision` — architectural decisions inherited from
-  byob-go-cli. References, never work to close.
+- `bd list --type=byob` — byob library beads (architectural
+  decisions inherited from byob-go-cli). References, never work
+  to close.
 - `bd memories` — one-line tips that auto-inject via `bd prime`.
-- `bd ready` / `bd list --type task` — your actual work items.
+- `bd ready --exclude-type=byob` / `bd list --type=task` — your
+  actual work items.
 
 ## Build & Test
 
@@ -97,14 +109,21 @@ workspace):
 
 ```bash
 cd ~/repos/my-existing-tool
+# Register byob's custom issue type (additive — preserves any
+# types.custom you've already configured).
+current=$(bd config get types.custom 2>/dev/null)
+case "$current" in *"(not set)"*) current="" ;; esac
+bd config set types.custom "${current:+$current,}byob"
 curl -L -o /tmp/byob-decisions.jsonl \
   https://github.com/<user>/byob-go-cli/releases/latest/download/issues.jsonl
 bd import /tmp/byob-decisions.jsonl
 ```
 
-Beads' import is an upsert, so your existing issues and memories are
-untouched. The decision beads arrive under their stable `byob-*` IDs
-so they coexist cleanly with your project's native prefix.
+Beads' import is an upsert, so your existing issues and memories
+are untouched. The library beads arrive under their stable
+`byob-*` IDs and the custom `byob` type, so they coexist cleanly
+with your project's native prefix and don't collide with your
+own decisions or epics.
 
 Pin to a specific template version with a tag URL instead of
 `latest`:
@@ -118,15 +137,17 @@ curl -L -o /tmp/byob-decisions.jsonl \
 
 The beads database in a forked project holds three kinds of records:
 
-- `type=decision` — architectural decisions from the template. Immortal
-  references, not work to close.
+- `type=byob` — byob library beads (architectural decisions from
+  the template). Immortal references, not work to close.
 - `_type=memory` — one-line tips. Auto-inject into every agent session.
 - `type=task` — your actual work items for this specific tool. Claim
   with `bd update <id> --claim`, close with `bd close <id>`.
 
-`bd ready` filters to open tasks, so it skips the decision beads by
-design. `bd list --type decision -l <category>` browses the decisions
-by category (`factory-di`, `testing`, `errors`, etc.). `bd memories`
+`bd ready --exclude-type=byob` shows ready work without the
+library polluting the list — your own decisions and epics still
+surface because they use the built-in types.
+`bd list --type=byob -l <category>` browses the library by
+category (`factory-di`, `testing`, `errors`, etc.). `bd memories`
 lists the tip layer; `bd memories <keyword>` searches.
 
 Agents landing in a fork should start with `bd prime` (runs the
@@ -147,7 +168,7 @@ $EDITOR decisions/command-shape/byob-command-shape.1.md
 make import
 
 # Option B: edit via bd, then re-sync the md tree
-bd create "New principle" -t decision --parent <epic> \
+bd create "New principle" -t byob --parent byob-errors \
   --body-file body.md --design-file design.md
 make export
 ```

@@ -1,7 +1,7 @@
 ---
 id: byob-storage.2
 title: 'Two-field DB config: Driver + DSN, not a fused URL'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-storage

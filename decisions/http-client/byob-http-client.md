@@ -1,7 +1,7 @@
 ---
 id: byob-http-client
 title: HTTP client
-type: epic
+type: byob
 priority: 2
 status: open
 labels:

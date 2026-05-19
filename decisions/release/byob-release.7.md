@@ -1,7 +1,7 @@
 ---
 id: byob-release.7
 title: 'Recommended .golangci.yml: pin the lint floor byob idioms assume'
-type: decision
+type: byob
 priority: 2
 status: open
 parent: byob-release

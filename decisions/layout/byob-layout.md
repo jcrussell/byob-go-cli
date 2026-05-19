@@ -1,7 +1,7 @@
 ---
 id: byob-layout
 title: Layout
-type: epic
+type: byob
 priority: 2
 status: open
 labels:
