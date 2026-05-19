@@ -38,6 +38,9 @@ jobs:
           # --skip-agents: byob ships its own CLAUDE.md; do not
           # mutate it during the release build.
           BD_NON_INTERACTIVE=1 bd init --prefix byob --skip-agents
+          # Register the custom "byob" type so bd import accepts the
+          # library records on the next step.
+          bd config set types.custom "byob"
 
       - name: Build release JSONL from markdown source
         run: |
